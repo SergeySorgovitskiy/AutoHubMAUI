@@ -8,9 +8,9 @@
     Title="AutoHub">
 
     <ShellContent
-    Title="Register"
-    ContentTemplate="{DataTemplate views:LoginPage}"
-    Route="RegisterPage" 
-    Shell.NavBarIsVisible="False"/>
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage"
+        Shell.NavBarIsVisible="False"/>
 
 </Shell>

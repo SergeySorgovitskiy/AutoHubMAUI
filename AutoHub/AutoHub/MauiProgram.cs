@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
-using CommunityToolkit.Maui.Extensions;
-using AutoHub.Views;              
+using AutoHub.Views;
 using AutoHub.ViewModels;
+using AutoHub.Services.NavigationService;
 
 namespace AutoHub
 {
@@ -20,8 +20,8 @@ namespace AutoHub
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
             builder.Services.AddSingletonWithShellRoute<LoginPage, LoginPageViewModel>("LoginPage");
-            builder.Services.AddSingletonWithShellRoute<LoginPage, LoginPageViewModel>("RegisterPage");
-
+            builder.Services.AddSingletonWithShellRoute<RegisterPage, RegisterPageViewModel>("RegisterPage");
+            builder.Services.AddSingleton<INavigationService, NavigationService>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:AutoHub.ViewModels"
              x:Class="AutoHub.Views.RegisterPage"
-             Title="RegisterPage">
+             Title="RegisterPage"
+             x:DataType="viewModels:RegisterPageViewModel">
     <VerticalStackLayout Spacing="15">
         <Border BackgroundColor="#FBFAF9" StrokeThickness="0">
             <Grid ColumnDefinitions="Auto, *" VerticalOptions="Center" Padding="20">
@@ -12,7 +14,8 @@
                     HeightRequest="30"
                     WidthRequest="30"
                     Margin="10,0"/>
-                <Label HorizontalTextAlignment="Start" 
+                <Label 
+                    HorizontalTextAlignment="Start" 
                     Text="AutoHub" 
                     FontAttributes="Bold" 
                     FontSize="20"/>
@@ -30,40 +33,113 @@
             </Label>
         </Grid>
         </Border>
-        <VerticalStackLayout Margin="0,-30" Padding="20">
-            <Border Padding="10" HeightRequest="70" Margin="0,0,0,10" StrokeShape="10" StrokeThickness="0" BackgroundColor="#E8E8E8">
+        <VerticalStackLayout 
+            Margin="0,0,0,0" 
+            Padding="20">
+            <Border 
+                Padding="10" 
+                HeightRequest="80" 
+                Margin="0,0,0,10" 
+                StrokeShape="10" 
+                StrokeThickness="0" 
+                BackgroundColor="#E8E8E8">
                 <VerticalStackLayout>
-                    <Label FontAttributes="Bold" FontSize="15" Text="Create your account"/>
-                <Label FontSize="10" Text="Use your email and phone number to get started"/>
+                    <Label 
+                        FontAttributes="Bold" 
+                        FontSize="25" 
+                        Text="Create your account"/>
+                <Label 
+                    FontSize="15" 
+                    Text="Use your email and phone number to get started"/>
                 </VerticalStackLayout>
             </Border>
-            <Border StrokeThickness="1" BackgroundColor="#F8F8F7"  StrokeShape="10">
-                <Entry Placeholder="Full name"/>
+            <Border 
+                StrokeThickness="1" 
+                BackgroundColor="#F8F8F7"  
+                StrokeShape="10">
+                <Entry 
+                    Keyboard="Text"
+                    Text="{Binding Name}"
+                    Placeholder="Name"/>
         </Border>
-        <Border Margin="0,5" StrokeThickness="1" BackgroundColor="#F8F8F7" StrokeShape="10">
-            <Entry Placeholder="Email"/>
+        <Border 
+            Margin="0,5" 
+            StrokeThickness="1" 
+            BackgroundColor="#F8F8F7" 
+            StrokeShape="10">
+            <Entry
+                Keyboard="Email"
+                Text="{Binding Email}"
+                Placeholder="Email"/>
         </Border>
-            <Border Margin="0,5" StrokeThickness="1" BackgroundColor="#F8F8F7" StrokeShape="10">
-                <Entry Placeholder="Phone number"/>
+            <Border 
+                Margin="0,5" 
+                StrokeThickness="1" 
+                BackgroundColor="#F8F8F7" 
+                StrokeShape="10">
+                <Entry 
+                    Keyboard="Telephone"
+                    Text="{Binding PhoneNumber}"
+                    Placeholder="Phone number"/>
             </Border>
-            <Border Margin="0,5" StrokeThickness="1" BackgroundColor="#F8F8F7" StrokeShape="10">
-                <Entry Placeholder="Password" IsPassword="True"/>
+            <Border 
+                Margin="0,5" 
+                StrokeThickness="1" 
+                BackgroundColor="#F8F8F7" 
+                StrokeShape="10">
+                <Entry
+                    Keyboard="Password"
+                    Text="{Binding Password}"
+                    Placeholder="Password" 
+                    IsPassword="True"/>
             </Border>
-            <Border Margin="0,5" StrokeThickness="1" BackgroundColor="#F8F8F7" StrokeShape="10">
-                <Entry Placeholder="Confirm Password" IsPassword="True"/>
+            <Border 
+                Margin="0,5" 
+                StrokeThickness="1" 
+                BackgroundColor="#F8F8F7" 
+                StrokeShape="10">
+                <Entry 
+                    Keyboard="Password"
+                    Text="{Binding ConfirmPassword}"
+                    Placeholder="Confirm Password" 
+                    IsPassword="True"/>
             </Border>
-            <Border Margin="0,10" StrokeThickness="0" StrokeShape="RoundRectangle 15" BackgroundColor="#CCEFEB" Padding="10">
-                <Grid ColumnDefinitions="Auto, *" ColumnSpacing="10" VerticalOptions="Center">
-                    <Border HeightRequest="10" Grid.Column="0" StrokeThickness="0" StrokeShape="10" BackgroundColor="#CCEFEB">
+            <Border 
+                Margin="0,10" 
+                StrokeThickness="0" 
+                StrokeShape="RoundRectangle 15" 
+                BackgroundColor="#CCEFEB" 
+                Padding="10">
+                <Grid 
+                    ColumnDefinitions="Auto, *" 
+                    ColumnSpacing="10" 
+                    VerticalOptions="Center">
+                    <Border 
+                        HeightRequest="10" 
+                        Grid.Column="0" 
+                        StrokeThickness="0" 
+                        StrokeShape="10" 
+                        BackgroundColor="#CCEFEB">
                         <Image Source="logo.png"/>
                     </Border>
                     <VerticalStackLayout Grid.Column="1">
-                        <Label LineBreakMode="WordWrap" FontSize="12" TextColor="#00B09F" VerticalTextAlignment="Center" Text="By continuing, you agree to the Terms"/>
+                        <Label 
+                            LineBreakMode="WordWrap" 
+                            FontSize="12" 
+                            TextColor="#00B09F" 
+                            VerticalTextAlignment="Center" 
+                            Text="By continuing, you agree to the Terms"/>
                     </VerticalStackLayout>
                 </Grid>
             </Border>
-            <Border StrokeThickness="1" StrokeShape="10">
-                <Button x:Name="SignInButton" BackgroundColor="#00B09F" Text="Create account"/>
+            <Border 
+                StrokeThickness="1" 
+                StrokeShape="10">
+                <Button 
+                    Command="{Binding CreateAccountCommand}"
+                    x:Name="SignInButton" 
+                    BackgroundColor="#00B09F" 
+                    Text="Create account"/>
             </Border>
         </VerticalStackLayout>
     </VerticalStackLayout>
