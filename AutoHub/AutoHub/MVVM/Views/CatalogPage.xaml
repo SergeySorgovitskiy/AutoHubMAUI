@@ -1,0 +1,216 @@
+<ContentPage
+    x:Class="AutoHub.MVVM.Views.CatalogPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:AutoHub.MVVM.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
+    x:DataType="viewModels:CatalogPageViewModel"
+    BackgroundColor="#F0F2F5">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding LoadCarsCommand}" EventName="Loaded" />
+    </ContentPage.Behaviors>
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+
+        <Grid
+            Grid.Row="0"
+            Margin="10,5"
+            ColumnDefinitions="*, Auto"
+            ColumnSpacing="10">
+
+            <Border
+                Grid.Column="0"
+                BackgroundColor="White"
+                HeightRequest="50"
+                Stroke="LightGray"
+                StrokeShape="RoundRectangle 25"
+                StrokeThickness="1">
+
+                <Grid
+                    Margin="10,0"
+                    ColumnDefinitions="Auto, *"
+                    ColumnSpacing="10">
+                    <Image
+                        Grid.Column="0"
+                        HeightRequest="20"
+                        Source="search.png"
+                        VerticalOptions="Center"
+                        WidthRequest="20" />
+                    <Entry
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        Placeholder="Search makes, models, or keywords..."
+                        Text="{Binding SearchQuery}"
+                        VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <Button
+                Grid.Column="1"
+                BackgroundColor="#CCEFEB"
+                ContentLayout="Left, 5"
+                CornerRadius="25"
+                HeightRequest="40"
+                ImageSource="filter_icon.png"
+                Text="Filters"
+                TextColor="#00B09F"
+                VerticalOptions="Center"
+                WidthRequest="100" />
+        </Grid>
+
+        <ScrollView
+            Grid.Row="1"
+            Padding="10,0"
+            HorizontalOptions="Center"
+            Orientation="Horizontal">
+            <HorizontalStackLayout Spacing="10">
+                <Button
+                    BackgroundColor="#CCEFEB"
+                    CornerRadius="15"
+                    Text="Make"
+                    TextColor="#00B09F" />
+                <Button
+                    BackgroundColor="#CCEFEB"
+                    CornerRadius="15"
+                    Text="Model"
+                    TextColor="#00B09F" />
+                <Button
+                    BackgroundColor="#CCEFEB"
+                    CornerRadius="15"
+                    Text="Price"
+                    TextColor="#00B09F" />
+                <Button
+                    BackgroundColor="#CCEFEB"
+                    CornerRadius="15"
+                    Text="Year"
+                    TextColor="#00B09F" />
+                <Button
+                    BackgroundColor="#CCEFEB"
+                    CornerRadius="15"
+                    Text="Mileage"
+                    TextColor="#00B09F" />
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <CollectionView
+            Grid.Row="3"
+            Margin="10,5"
+            IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+            ItemsSource="{Binding Cars}">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:CarListingModel">
+
+                    <Border
+                        Margin="10,5"
+                        Padding="0"
+                        BackgroundColor="White"
+                        Stroke="LightGray"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="1">
+                        <Grid
+                            ColumnDefinitions="160,*"
+                            ColumnSpacing="10"
+                            IsClippedToBounds="True">
+                            <Image
+                                Grid.Column="0"
+                                Aspect="AspectFill"
+                                BackgroundColor="LightGray"
+                                HeightRequest="100"
+                                Source="{Binding ImageUrl}" />
+                            <Grid
+                                Grid.Column="1"
+                                Padding="0,10,10,10"
+                                RowDefinitions="Auto, Auto, *">
+                                <Grid Grid.Row="0" ColumnDefinitions="*, Auto">
+                                    <Label
+                                        Grid.Column="0"
+                                        FontAttributes="Bold"
+                                        FontSize="16"
+                                        Text="{Binding Title}" />
+                                    <Label
+                                        Grid.Column="1"
+                                        FontAttributes="Bold"
+                                        FontSize="16"
+                                        HorizontalOptions="End"
+                                        Text="{Binding Price, StringFormat='${0:N0}'}" />
+                                </Grid>
+                                <Label
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Text="{Binding Subtitle}"
+                                    TextColor="Gray" />
+                                <HorizontalStackLayout
+                                    Grid.Row="2"
+                                    Spacing="10"
+                                    VerticalOptions="End">
+                                    <Border
+                                        Padding="8,4"
+                                        BackgroundColor="#E0F2F1"
+                                        IsVisible="{Binding IsElectric}"
+                                        StrokeShape="RoundRectangle 10"
+                                        StrokeThickness="0">
+
+                                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                                            <Image
+                                                Aspect="AspectFit"
+                                                HeightRequest="12"
+                                                Source="electro.png"
+                                                VerticalOptions="Center"
+                                                WidthRequest="12" />
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontSize="11"
+                                                Text="EV"
+                                                TextColor="#00796B"
+                                                VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                    </Border>
+
+                                    <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                                        <Image
+                                            Aspect="AspectFit"
+                                            HeightRequest="12"
+                                            Source="mileage.png"
+                                            VerticalOptions="Center"
+                                            WidthRequest="12" />
+                                        <Label
+                                            FontSize="11"
+                                            Text="{Binding Mileage, StringFormat='{0:N0} mi'}"
+                                            TextColor="Gray"
+                                            VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+
+                                    <Label
+                                        FontSize="11"
+                                        Text="{Binding Location}"
+                                        TextColor="Gray"
+                                        VerticalOptions="Center" />
+
+                                </HorizontalStackLayout>
+
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator
+            Grid.Row="3"
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            Color="#00B09F" />
+    </Grid>
+
+</ContentPage>

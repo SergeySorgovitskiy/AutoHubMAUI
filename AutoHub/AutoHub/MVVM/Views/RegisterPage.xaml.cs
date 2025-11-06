@@ -1,6 +1,6 @@
-using AutoHub.ViewModels;
+using AutoHub.MVVM.ViewModels;
 
-namespace AutoHub.Views;
+namespace AutoHub.MVVM.Views;
 
 public partial class RegisterPage : ContentPage
 {

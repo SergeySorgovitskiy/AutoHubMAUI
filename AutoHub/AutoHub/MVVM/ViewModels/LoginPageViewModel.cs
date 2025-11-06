@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel.DataAnnotations;
 
-namespace AutoHub.ViewModels
+namespace AutoHub.MVVM.ViewModels
 {
     public partial class LoginPageViewModel : ObservableValidator
     {
@@ -15,13 +15,13 @@ namespace AutoHub.ViewModels
         }
 
         [ObservableProperty]
-        [Required(ErrorMessage = "Email не должен быть пустым!")]
-        [EmailAddress(ErrorMessage = "Неверный формат Email!")]
-        private string _email = "";
+        [Required(ErrorMessage = "Email is required!")]
+        [EmailAddress(ErrorMessage = "Incorrect Email format!")]
+        private string _email = string.Empty;
 
         [ObservableProperty]
-        [Required(ErrorMessage = "Пароль не должен быть пустым")]
-        private string _password = "";
+        [Required(ErrorMessage = "The password must not be empty.")]
+        private string _password = string.Empty;
 
         [RelayCommand]
         private async Task LoginAsync()
@@ -31,12 +31,12 @@ namespace AutoHub.ViewModels
             if (HasErrors)
             {
                 var firstError = GetErrors().FirstOrDefault()?.ErrorMessage;
-                await Application.Current.MainPage.DisplayAlert("Ошибка", firstError, "OK");
+                await Application.Current.MainPage.DisplayAlert("Error", firstError, "OK");
 
                 return;
             }
 
-            await Application.Current.MainPage.DisplayAlert("Успех!", "Вход выполнен!", "ОК");
+            await Application.Current.MainPage.DisplayAlert("Success!", "Login successful!", "ОК");
 
             await _navigationService.GoToCatalogAsync();
             

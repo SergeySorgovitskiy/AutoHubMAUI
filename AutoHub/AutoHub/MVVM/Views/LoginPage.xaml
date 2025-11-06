@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AutoHub.MVVM.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
+    Title="LoginPage"
+    x:DataType="viewModels:LoginPageViewModel">
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <HorizontalStackLayout Grid.Column="0">
+            <Image
+                Margin="10,0"
+                HeightRequest="30"
+                Source="logo.png"
+                WidthRequest="30" />
+            <Label
+                FontAttributes="Bold"
+                FontSize="20"
+                HorizontalTextAlignment="Start"
+                Text="AutoHub" />
+        </HorizontalStackLayout>
+        <Label FontSize="28" Text="Welcome!" />
+        <Label
+            FontSize="18"
+            Text="Find your perfect car or list yours in minutes."
+            TextColor="Gray" />
+        <Border
+            Padding="20"
+            BackgroundColor="#CCEFEB"
+            StrokeShape="RoundRectangle 15"
+            StrokeThickness="0">
+            <Grid
+                ColumnDefinitions="Auto, *"
+                ColumnSpacing="10"
+                VerticalOptions="Center">
+                <Border
+                    Grid.Column="0"
+                    BackgroundColor="White"
+                    HeightRequest="40"
+                    StrokeShape="10"
+                    StrokeThickness="0"
+                    WidthRequest="70">
+                    <Image
+                        HeightRequest="35"
+                        Source="logo.png"
+                        WidthRequest="40" />
+                </Border>
+                <VerticalStackLayout Grid.Column="1">
+                    <Label
+                        FontSize="Medium"
+                        LineBreakMode="WordWrap"
+                        Text="Thousands of verified listings"
+                        TextColor="#00B09F" />
+                    <Label
+                        LineBreakMode="WordWrap"
+                        Text="Smart filters, favorites and viewing history"
+                        TextColor="#949494" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+        <Label FontSize="30" Text="Sign in" />
+        <Border
+            BackgroundColor="#F8F8F7"
+            StrokeShape="10"
+            StrokeThickness="1">
+            <Entry Placeholder="Email" Text="{Binding Email}" />
+        </Border>
+        <Border
+            BackgroundColor="#F8F8F7"
+            StrokeShape="10"
+            StrokeThickness="1">
+            <Entry
+                IsPassword="True"
+                Placeholder="Password"
+                Text="{Binding Password}" />
+        </Border>
+        <Border StrokeShape="10" StrokeThickness="1">
+            <Button
+                x:Name="SignInButton"
+                BackgroundColor="#00B09F"
+                Command="{Binding LoginCommand}"
+                Text="Log in" />
+        </Border>
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+            <Label Text="Register" TextColor="#00B09F">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Text="Forgot password?" TextColor="#00B09F">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+
+</ContentPage>
