@@ -8,15 +8,16 @@
     Title="AutoHub">
 
     <ShellContent
-    Title="Login"
-    ContentTemplate="{DataTemplate views:LoginPage}" Route="LoginPage"
-    Shell.NavBarIsVisible="False"/>
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage"
+        Shell.NavBarIsVisible="False" />
 
     <TabBar Route="MainApp">
         <ShellContent
-        Title="Каталог"
-        ContentTemplate="{DataTemplate views:CatalogPage}"
-        Route="CatalogPage" />
+            Title="Catalog"
+            ContentTemplate="{DataTemplate views:CatalogPage}"
+            Route="CatalogPage" />
     </TabBar>
 
 </Shell>

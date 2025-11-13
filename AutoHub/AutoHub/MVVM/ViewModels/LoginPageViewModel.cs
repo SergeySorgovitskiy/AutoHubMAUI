@@ -20,23 +20,30 @@ namespace AutoHub.MVVM.ViewModels
         private string _email = string.Empty;
 
         [ObservableProperty]
-        [Required(ErrorMessage = "The password must not be empty.")]
+        [Required(ErrorMessage = "The password cannot be empty.")]
         private string _password = string.Empty;
+
+        [ObservableProperty]
+        private string _errorMessage;
+        public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
+        partial void OnErrorMessageChanged(string value)
+        {
+            OnPropertyChanged(nameof(HasErrorMessage));
+        }
 
         [RelayCommand]
         private async Task LoginAsync()
         {
+            ErrorMessage = string.Empty;
+
             ValidateAllProperties();
 
             if (HasErrors)
             {
                 var firstError = GetErrors().FirstOrDefault()?.ErrorMessage;
-                await Application.Current.MainPage.DisplayAlert("Error", firstError, "OK");
-
+                ErrorMessage = firstError;
                 return;
             }
-
-            await Application.Current.MainPage.DisplayAlert("Success!", "Login successful!", "ОК");
 
             await _navigationService.GoToCatalogAsync();
             

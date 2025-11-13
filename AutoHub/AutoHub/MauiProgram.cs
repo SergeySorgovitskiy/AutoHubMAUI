@@ -72,6 +72,7 @@ namespace AutoHub
             builder.Services.AddTransientWithShellRoute<LoginPage, LoginPageViewModel>("LoginPage");
             builder.Services.AddTransientWithShellRoute<RegisterPage, RegisterPageViewModel>("RegisterPage");
             builder.Services.AddTransientWithShellRoute<CatalogPage, CatalogPageViewModel>("CatalogPage");
+            builder.Services.AddTransientWithShellRoute<DetailsPage, DetailsPageViewModel>("DetailsPage");
             builder.Services.AddSingleton<INavigationService, NavigationService>();
             builder.Services.AddSingleton<IMockService, MockService>();
 #if DEBUG

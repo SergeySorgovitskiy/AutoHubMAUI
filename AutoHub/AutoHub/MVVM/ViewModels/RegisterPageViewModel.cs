@@ -15,49 +15,78 @@ namespace AutoHub.MVVM.ViewModels
 
         [ObservableProperty]
         [Required(ErrorMessage = "Username is required!")]
-        [MinLength(3, ErrorMessage = "Username must be at least 3 characters long")]
-        [MaxLength(20, ErrorMessage = "Username must be no more than 20 characters long")]
+        [MinLength(3, ErrorMessage = "The username must be at least 3 characters long")]
+        [MaxLength(20, ErrorMessage = "The username must be no more than 20 characters long.")]
         [RegularExpression(@"^[a-zA-Z]*$", ErrorMessage = "Only letters are allowed")]
         private string _name = string.Empty;
 
         [ObservableProperty]
         [Required(ErrorMessage = "Email is required!")]
-        [EmailAddress(ErrorMessage = "Invalid Email format!")]
+        [EmailAddress(ErrorMessage = "Incorrect Email format!")]
         private string _email = string.Empty;
 
         [ObservableProperty]
-        [Required(ErrorMessage = "Phone number is required!")]
-        [Phone(ErrorMessage = "Invalid phone number!")]
+        [Required(ErrorMessage = "A phone number is required!")]
+        [Phone(ErrorMessage = "Incorrect phone number format!")]
         private string _phoneNumber = string.Empty;
 
         [ObservableProperty]
-        [Required(ErrorMessage = "Password cannot be empty")]
-        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long!")]
+        private bool _isPasswordLengthValid;
+        [ObservableProperty]
+        private bool _isPasswordUpperCaseValid;
+        [ObservableProperty]
+        private bool _isPasswordNumberValid;
+
         private string _password = string.Empty;
 
-        [ObservableProperty]
-        [Required(ErrorMessage = "Please confirm your password")]
+        [Required(ErrorMessage = "The password cannot be empty!")]
+        [MinLength(8, ErrorMessage = "The password must be at least 8 characters long!")]
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                SetProperty(ref _password, value, validate: true);
+                IsPasswordLengthValid = value.Length >= 8;
+                IsPasswordNumberValid = value.Any(char.IsDigit);
+                IsPasswordUpperCaseValid = value.Any(char.IsUpper);
+
+            }
+        }
+
         private string _confirmPassword = string.Empty;
+
+        [Required(ErrorMessage = "Please, confirm your password!")]
+        [Compare(nameof(Password), ErrorMessage = "Passwords don't match!")]
+        public string ConfirmPassword
+        {
+            get => _confirmPassword;
+            set => SetProperty(ref _confirmPassword, value, validate: true);
+        }
+      
+        [ObservableProperty]
+        private string _errorMessage;
+
+        public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
+
+        partial void OnErrorMessageChanged(string value)
+        {
+            OnPropertyChanged(nameof(HasErrorMessage));
+        }
 
         [RelayCommand]
         private async Task CreateAccountAsync()
         {
-            if (Password != ConfirmPassword)
-            {
-                await Application.Current.MainPage.DisplayAlert("Error", "Passwords do not match!", "OK");
-                return;
-            }
+            ErrorMessage = string.Empty;
 
             ValidateAllProperties();
 
             if (HasErrors)
             {
                 var firstError = GetErrors().FirstOrDefault()?.ErrorMessage;
-                await Application.Current.MainPage.DisplayAlert("Error", firstError, "OK");
+                ErrorMessage = firstError;
                 return;
             }
-
-            await Application.Current.MainPage.DisplayAlert("Success!", "Account created!", "OK");
 
             await _navigationService.GoToCatalogAsync();
         }

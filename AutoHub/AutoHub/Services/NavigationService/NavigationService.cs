@@ -24,5 +24,9 @@ namespace AutoHub.Services.NavigationService
         {
             return Shell.Current.GoToAsync("..");
         }
+        public Task GoToDetailsAsync(int carId)
+        {
+            return Shell.Current.GoToAsync($"{nameof(DetailsPage)}?Id={carId}");
+        }
     }
 }

@@ -1,10 +1,16 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AutoHub.MVVM.Views.RegisterPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:AutoHub.Converters"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
     x:DataType="viewModels:RegisterPageViewModel">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BoolToValidationColorConverter x:Key="ValidationColor" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <VerticalStackLayout Spacing="15">
         <Border BackgroundColor="#FBFAF9" StrokeThickness="0">
             <Grid
@@ -50,6 +56,11 @@
                     Placeholder="Name"
                     Text="{Binding Name}" />
             </Border>
+            <Label
+                Padding="5,5"
+                FontSize="10"
+                Text="- 3-20 letters only (A-z)."
+                TextColor="Gray" />
             <Border
                 Margin="0,5"
                 BackgroundColor="#F8F8F7"
@@ -60,6 +71,11 @@
                     Placeholder="Email"
                     Text="{Binding Email}" />
             </Border>
+            <Label
+                Padding="5,0"
+                FontSize="10"
+                Text="- Use (yourmail@gmail.com) format."
+                TextColor="Gray" />
             <Border
                 Margin="0,5"
                 BackgroundColor="#F8F8F7"
@@ -70,6 +86,11 @@
                     Placeholder="Phone number"
                     Text="{Binding PhoneNumber}" />
             </Border>
+            <Label
+                Padding="5,0"
+                FontSize="10"
+                Text="- Use (XX)-XXX-XX-XX format."
+                TextColor="Gray" />
             <Border
                 Margin="0,5"
                 BackgroundColor="#F8F8F7"
@@ -77,10 +98,27 @@
                 StrokeThickness="1">
                 <Entry
                     IsPassword="True"
-                    Keyboard="Password"
                     Placeholder="Password"
                     Text="{Binding Password}" />
             </Border>
+            <VerticalStackLayout Padding="5,0" Spacing="3">
+                <Label
+                    FontSize="10"
+                    Text="- Required length(8 characters);"
+                    TextColor="{Binding IsPasswordLengthValid, Converter={StaticResource ValidationColor}}" />
+
+                <Label
+                    FontSize="10"
+                    Text="- Capital letter(one is required);"
+                    TextColor="{Binding IsPasswordUpperCaseValid, Converter={StaticResource ValidationColor}}" />
+
+                <Label
+                    FontSize="10"
+                    Text="- Digits(one is required)."
+                    TextColor="{Binding IsPasswordNumberValid, Converter={StaticResource ValidationColor}}" />
+
+            </VerticalStackLayout>
+
             <Border
                 Margin="0,5"
                 BackgroundColor="#F8F8F7"
@@ -127,6 +165,12 @@
                     Command="{Binding CreateAccountCommand}"
                     Text="Create account" />
             </Border>
+            <Label
+                Padding="0,5"
+                HorizontalOptions="Center"
+                IsVisible="{Binding HasErrorMessage}"
+                Text="{Binding ErrorMessage}"
+                TextColor="Red" />
         </VerticalStackLayout>
     </VerticalStackLayout>
 

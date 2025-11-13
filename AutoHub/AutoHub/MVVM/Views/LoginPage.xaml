@@ -81,6 +81,12 @@
                 Command="{Binding LoginCommand}"
                 Text="Log in" />
         </Border>
+        <Label
+            Padding="0,5"
+            HorizontalOptions="Center"
+            IsVisible="{Binding HasErrorMessage}"
+            Text="{Binding ErrorMessage}"
+            TextColor="Red" />
         <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
             <Label Text="Register" TextColor="#00B09F">
                 <Label.GestureRecognizers>

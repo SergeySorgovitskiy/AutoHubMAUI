@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace AutoHub.MVVM.ViewModels
 {
@@ -23,6 +24,13 @@ namespace AutoHub.MVVM.ViewModels
             _mockService = mockService;
             _navigationService = navigationService;
             _cars = new ObservableCollection<CarListingModel>();
+        }
+
+        [RelayCommand]
+        private async Task GoToDetailsAsync(CarListingModel car)
+        {
+ 
+           await _navigationService.GoToDetailsAsync(car.Id);
         }
 
         [RelayCommand]

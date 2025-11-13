@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 namespace AutoHub.Services.NavigationService
 {
     public interface INavigationService
@@ -9,6 +8,7 @@ namespace AutoHub.Services.NavigationService
         Task GoToForgotPasswordAsync();
         Task GoToCatalogAsync();
         Task GoBackAsync();
+        Task GoToDetailsAsync(int carId);
 
     }
 }

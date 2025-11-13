@@ -9,9 +9,9 @@
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
         public int Mileage { get; set; }
-        public int Millage { get; set; }
         public string Location { get; set; }
         public bool IsElectric { get; set; }
+        public List<string> DetailsImagesUrls { get; set; }
 
     }
 }

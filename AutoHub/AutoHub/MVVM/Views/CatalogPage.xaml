@@ -116,6 +116,9 @@
                         Stroke="LightGray"
                         StrokeShape="RoundRectangle 20"
                         StrokeThickness="1">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:CatalogPageViewModel}}, Path=GoToDetailsCommand}" CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
                         <Grid
                             ColumnDefinitions="160,*"
                             ColumnSpacing="10"

@@ -6,9 +6,9 @@ public partial class CatalogPage : ContentPage
 {
 	public CatalogPage(CatalogPageViewModel vm)
 	{
-		BindingContext = vm;
 		InitializeComponent();
-	}
+        BindingContext = vm;
+    }
 
 	protected override void OnAppearing()
 	{
