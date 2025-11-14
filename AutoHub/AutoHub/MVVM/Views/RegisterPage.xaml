@@ -2,13 +2,17 @@
     x:Class="AutoHub.MVVM.Views.RegisterPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:converters="clr-namespace:AutoHub.Converters"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
-    x:DataType="viewModels:RegisterPageViewModel">
+    x:DataType="viewModels:RegisterPageViewModel"
+    HideSoftInputOnTapped="True">
+
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:BoolToValidationColorConverter x:Key="ValidationColor" />
+            <toolkit:BoolToObjectConverter
+                x:Key="ValidationColor"
+                FalseObject="{x:Static Colors.Gray}"
+                TrueObject="{x:Static Colors.Green}" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <VerticalStackLayout Spacing="15">
@@ -21,7 +25,7 @@
                     <Image
                         Margin="10,0"
                         HeightRequest="30"
-                        Source="logo.png"
+                        Source="logo.svg"
                         WidthRequest="30" />
                     <Label
                         FontAttributes="Bold"

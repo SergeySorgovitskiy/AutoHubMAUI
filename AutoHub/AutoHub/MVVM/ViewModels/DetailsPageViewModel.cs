@@ -1,5 +1,5 @@
 ﻿using AutoHub.MVVM.Models;
-using AutoHub.Services.MockService;
+using AutoHub.Services.DataService;
 using AutoHub.Services.NavigationService;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,11 +9,11 @@ using System.Diagnostics;
 namespace AutoHub.MVVM.ViewModels
 {
     [QueryProperty(nameof(CarId), "Id")]
-    public partial class DetailsPageViewModel : ObservableValidator
+    public partial class DetailsPageViewModel : ObservableObject
     {
-        private readonly IMockService _mockService;
+        private readonly IDataService _mockService;
         private readonly INavigationService _navigationService;
-        public DetailsPageViewModel(INavigationService navigationService, IMockService mockService)
+        public DetailsPageViewModel(INavigationService navigationService, IDataService mockService)
         {
             _navigationService = navigationService;
             _mockService = mockService;

@@ -5,7 +5,8 @@
     xmlns:models="clr-namespace:AutoHub.MVVM.Models"
     xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
     x:DataType="viewModels:DetailsPageViewModel"
-    BackgroundColor="#F0F2F5">
+    BackgroundColor="#F0F2F5"
+    HideSoftInputOnTapped="True">
 
     <Grid RowDefinitions="300, *">
 
@@ -58,7 +59,7 @@
                         TextColor="#00B09F" />
                 </Grid>
 
-                <BoxView HeightRequest="1" Color="LightGray" />
+
 
                 <HorizontalStackLayout
                     Grid.Row="2"
@@ -116,7 +117,6 @@
 
             </VerticalStackLayout>
         </ScrollView>
-
         <Border
             Grid.RowSpan="2"
             BackgroundColor="#80FFFFFF"
@@ -130,3 +130,4 @@
 
     </Grid>
 </ContentPage>
+

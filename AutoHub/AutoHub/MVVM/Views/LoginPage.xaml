@@ -5,13 +5,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
     Title="LoginPage"
-    x:DataType="viewModels:LoginPageViewModel">
+    x:DataType="viewModels:LoginPageViewModel"
+    HideSoftInputOnTapped="True">
     <VerticalStackLayout Padding="20" Spacing="15">
         <HorizontalStackLayout Grid.Column="0">
             <Image
                 Margin="10,0"
                 HeightRequest="30"
-                Source="logo.png"
+                Source="logo.svg"
                 WidthRequest="30" />
             <Label
                 FontAttributes="Bold"

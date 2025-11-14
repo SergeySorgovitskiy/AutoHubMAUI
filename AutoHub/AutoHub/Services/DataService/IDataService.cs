@@ -1,8 +1,8 @@
 ﻿using AutoHub.MVVM.Models;
 
-namespace AutoHub.Services.MockService
+namespace AutoHub.Services.DataService
 {
-    public interface IMockService
+    public interface IDataService
     {
         Task<List<CarListingModel>> GetListingsAsync();
         Task<CarListingModel> GetDetailsByIdAsync(int carId);

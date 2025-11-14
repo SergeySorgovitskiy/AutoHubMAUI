@@ -1,29 +1,30 @@
 ﻿using AutoHub.MVVM.Models;
-using AutoHub.Services.MockService;
+using AutoHub.Services.DataService;
 using AutoHub.Services.NavigationService;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace AutoHub.MVVM.ViewModels
 {
-    public partial class CatalogPageViewModel : ObservableValidator
+    public partial class CatalogPageViewModel : ObservableObject
     {
-        private readonly IMockService _mockService;
+        private readonly IDataService _mockService;
         private readonly INavigationService _navigationService;
 
         [ObservableProperty]
-        private ObservableCollection<CarListingModel> _cars;
+        private List<CarListingModel> _cars;
 
         [ObservableProperty]
         private bool _isLoading;
-        public CatalogPageViewModel(IMockService mockService, INavigationService navigationService)
+
+        private readonly ILogger<CatalogPageViewModel> _logger;
+        public CatalogPageViewModel(IDataService mockService, INavigationService navigationService, ILogger<CatalogPageViewModel> logger)
         {
+            _logger = logger;
             _mockService = mockService;
             _navigationService = navigationService;
-            _cars = new ObservableCollection<CarListingModel>();
+            _cars = new List<CarListingModel>();
         }
 
         [RelayCommand]
@@ -40,19 +41,13 @@ namespace AutoHub.MVVM.ViewModels
                 return;
             try
             {
-                IsLoading = true;
-                await Task.Delay(2000);
+
                 var carList = await _mockService.GetListingsAsync();
-                Cars.Clear();
-                foreach (var car in carList)
-                {
-                    Cars.Add(car);
-                }
+                Cars = new List<CarListingModel>(carList);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[LoadCarsAync] Error: {ex.Message}");
-                await Shell.Current.DisplayAlert("Error", "Can't load list", "OK");
+                _logger.LogError(ex, "Failed to load car list.");
             }
             finally
             {

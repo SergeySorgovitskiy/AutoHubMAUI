@@ -6,17 +6,13 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
     x:DataType="viewModels:CatalogPageViewModel"
-    BackgroundColor="#F0F2F5">
-
+    BackgroundColor="#F0F2F5"
+    HideSoftInputOnTapped="True">
     <ContentPage.Resources>
         <ResourceDictionary>
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-
-    <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding LoadCarsCommand}" EventName="Loaded" />
-    </ContentPage.Behaviors>
 
     <Grid RowDefinitions="Auto, Auto, Auto, *">
 
@@ -41,7 +37,7 @@
                     <Image
                         Grid.Column="0"
                         HeightRequest="20"
-                        Source="search.png"
+                        Source="search.svg"
                         VerticalOptions="Center"
                         WidthRequest="20" />
                     <Entry
@@ -59,7 +55,7 @@
                 ContentLayout="Left, 5"
                 CornerRadius="25"
                 HeightRequest="40"
-                ImageSource="filter_icon.png"
+                ImageSource="options.svg"
                 Text="Filters"
                 TextColor="#00B09F"
                 VerticalOptions="Center"
@@ -166,7 +162,7 @@
                                             <Image
                                                 Aspect="AspectFit"
                                                 HeightRequest="12"
-                                                Source="electro.png"
+                                                Source="electro.svg"
                                                 VerticalOptions="Center"
                                                 WidthRequest="12" />
                                             <Label
@@ -182,7 +178,7 @@
                                         <Image
                                             Aspect="AspectFit"
                                             HeightRequest="12"
-                                            Source="mileage.png"
+                                            Source="mileage.svg"
                                             VerticalOptions="Center"
                                             WidthRequest="12" />
                                         <Label
@@ -201,6 +197,7 @@
                                 </HorizontalStackLayout>
 
                             </Grid>
+
                         </Grid>
                     </Border>
                 </DataTemplate>
