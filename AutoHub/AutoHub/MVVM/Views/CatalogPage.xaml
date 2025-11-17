@@ -8,13 +8,14 @@
     x:DataType="viewModels:CatalogPageViewModel"
     BackgroundColor="#F0F2F5"
     HideSoftInputOnTapped="True">
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto, Auto, Auto, *">
+    <Grid RowDefinitions="Auto, Auto, *">
 
         <Grid
             Grid.Row="0"
@@ -51,13 +52,13 @@
 
             <Button
                 Grid.Column="1"
-                BackgroundColor="#CCEFEB"
+                BackgroundColor="{StaticResource LightGreenBackground}"
                 ContentLayout="Left, 5"
                 CornerRadius="25"
                 HeightRequest="40"
                 ImageSource="options.svg"
                 Text="Filters"
-                TextColor="#00B09F"
+                TextColor="{StaticResource ButtonGreen}"
                 VerticalOptions="Center"
                 WidthRequest="100" />
         </Grid>
@@ -69,148 +70,150 @@
             Orientation="Horizontal">
             <HorizontalStackLayout Spacing="10">
                 <Button
-                    BackgroundColor="#CCEFEB"
+                    BackgroundColor="{StaticResource LightGreenBackground}"
                     CornerRadius="15"
                     Text="Make"
-                    TextColor="#00B09F" />
+                    TextColor="{StaticResource ButtonGreen}" />
                 <Button
-                    BackgroundColor="#CCEFEB"
+                    BackgroundColor="{StaticResource LightGreenBackground}"
                     CornerRadius="15"
                     Text="Model"
-                    TextColor="#00B09F" />
+                    TextColor="{StaticResource ButtonGreen}" />
                 <Button
-                    BackgroundColor="#CCEFEB"
+                    BackgroundColor="{StaticResource LightGreenBackground}"
                     CornerRadius="15"
                     Text="Price"
-                    TextColor="#00B09F" />
+                    TextColor="{StaticResource ButtonGreen}" />
                 <Button
-                    BackgroundColor="#CCEFEB"
+                    BackgroundColor="{StaticResource LightGreenBackground}"
                     CornerRadius="15"
                     Text="Year"
-                    TextColor="#00B09F" />
+                    TextColor="{StaticResource ButtonGreen}" />
                 <Button
-                    BackgroundColor="#CCEFEB"
+                    BackgroundColor="{StaticResource LightGreenBackground}"
                     CornerRadius="15"
                     Text="Mileage"
-                    TextColor="#00B09F" />
+                    TextColor="{StaticResource ButtonGreen}" />
             </HorizontalStackLayout>
         </ScrollView>
 
-        <CollectionView
-            Grid.Row="3"
-            Margin="10,5"
-            IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
-            ItemsSource="{Binding Cars}">
+        <RefreshView
+            Grid.Row="2"
+            Command="{Binding LoadCarsCommand}"
+            IsRefreshing="{Binding IsLoading}"
+            RefreshColor="{StaticResource ButtonGreen}">
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:CarListingModel">
+            <CollectionView Margin="10,5" ItemsSource="{Binding Cars}">
 
-                    <Border
-                        Margin="10,5"
-                        Padding="0"
-                        BackgroundColor="White"
-                        Stroke="LightGray"
-                        StrokeShape="RoundRectangle 20"
-                        StrokeThickness="1">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:CatalogPageViewModel}}, Path=GoToDetailsCommand}" CommandParameter="{Binding .}" />
-                        </Border.GestureRecognizers>
-                        <Grid
-                            ColumnDefinitions="160,*"
-                            ColumnSpacing="10"
-                            IsClippedToBounds="True">
-                            <Image
-                                Grid.Column="0"
-                                Aspect="AspectFill"
-                                BackgroundColor="LightGray"
-                                HeightRequest="100"
-                                Source="{Binding ImageUrl}" />
+                <CollectionView.EmptyView>
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="No cars found"
+                        TextColor="{StaticResource ValidateGrayLabel}"
+                        VerticalOptions="Center" />
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:CarListingModel">
+
+                        <Border
+                            Margin="10,5"
+                            Padding="0"
+                            BackgroundColor="White"
+                            Stroke="LightGray"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="1">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:CatalogPageViewModel}}, Path=GoToDetailsCommand}" CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
                             <Grid
-                                Grid.Column="1"
-                                Padding="0,10,10,10"
-                                RowDefinitions="Auto, Auto, *">
-                                <Grid Grid.Row="0" ColumnDefinitions="*, Auto">
+                                ColumnDefinitions="160,*"
+                                ColumnSpacing="10"
+                                IsClippedToBounds="True">
+                                <Image
+                                    Grid.Column="0"
+                                    Aspect="AspectFill"
+                                    HeightRequest="100"
+                                    Source="{Binding ImageUrl}" />
+                                <Grid
+                                    Grid.Column="1"
+                                    Padding="0,10,10,10"
+                                    RowDefinitions="Auto, Auto, *">
+                                    <Grid Grid.Row="0" ColumnDefinitions="*, Auto">
+                                        <Label
+                                            Grid.Column="0"
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            Text="{Binding Title}" />
+                                        <Label
+                                            Grid.Column="1"
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            HorizontalOptions="End"
+                                            Text="{Binding Price, StringFormat='${0:N0}'}" />
+                                    </Grid>
                                     <Label
-                                        Grid.Column="0"
-                                        FontAttributes="Bold"
-                                        FontSize="16"
-                                        Text="{Binding Title}" />
-                                    <Label
-                                        Grid.Column="1"
-                                        FontAttributes="Bold"
-                                        FontSize="16"
-                                        HorizontalOptions="End"
-                                        Text="{Binding Price, StringFormat='${0:N0}'}" />
-                                </Grid>
-                                <Label
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Text="{Binding Subtitle}"
-                                    TextColor="Gray" />
-                                <HorizontalStackLayout
-                                    Grid.Row="2"
-                                    Spacing="10"
-                                    VerticalOptions="End">
-                                    <Border
-                                        Padding="8,4"
-                                        BackgroundColor="#E0F2F1"
-                                        IsVisible="{Binding IsElectric}"
-                                        StrokeShape="RoundRectangle 10"
-                                        StrokeThickness="0">
+                                        Grid.Row="1"
+                                        FontSize="12"
+                                        Text="{Binding Subtitle}"
+                                        TextColor="{StaticResource DetailsGray}" />
+                                    <HorizontalStackLayout
+                                        Grid.Row="2"
+                                        Spacing="10"
+                                        VerticalOptions="End">
+                                        <Border
+                                            Padding="8,4"
+                                            BackgroundColor="#E0F2F1"
+                                            IsVisible="{Binding IsElectric}"
+                                            StrokeShape="RoundRectangle 10"
+                                            StrokeThickness="0">
 
-                                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                                            <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                                                <Image
+                                                    Aspect="AspectFit"
+                                                    HeightRequest="12"
+                                                    Source="electro.svg"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="12" />
+                                                <Label
+                                                    FontAttributes="Bold"
+                                                    FontSize="11"
+                                                    Text="EV"
+                                                    TextColor="{StaticResource ButtonGreen}"
+                                                    VerticalOptions="Center" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+
+                                        <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
                                             <Image
                                                 Aspect="AspectFit"
                                                 HeightRequest="12"
-                                                Source="electro.svg"
+                                                Source="mileage.svg"
                                                 VerticalOptions="Center"
                                                 WidthRequest="12" />
                                             <Label
-                                                FontAttributes="Bold"
                                                 FontSize="11"
-                                                Text="EV"
-                                                TextColor="#00796B"
+                                                Text="{Binding Mileage, StringFormat='{0:N0} mi'}"
+                                                TextColor="{StaticResource DetailsGray}"
                                                 VerticalOptions="Center" />
                                         </HorizontalStackLayout>
-                                    </Border>
 
-                                    <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
-                                        <Image
-                                            Aspect="AspectFit"
-                                            HeightRequest="12"
-                                            Source="mileage.svg"
-                                            VerticalOptions="Center"
-                                            WidthRequest="12" />
                                         <Label
                                             FontSize="11"
-                                            Text="{Binding Mileage, StringFormat='{0:N0} mi'}"
-                                            TextColor="Gray"
+                                            Text="{Binding Location}"
+                                            TextColor="{StaticResource DetailsGray}"
                                             VerticalOptions="Center" />
+
                                     </HorizontalStackLayout>
 
-                                    <Label
-                                        FontSize="11"
-                                        Text="{Binding Location}"
-                                        TextColor="Gray"
-                                        VerticalOptions="Center" />
-
-                                </HorizontalStackLayout>
+                                </Grid>
 
                             </Grid>
-
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
-        <ActivityIndicator
-            Grid.Row="3"
-            HorizontalOptions="Center"
-            IsRunning="{Binding IsLoading}"
-            IsVisible="{Binding IsLoading}"
-            VerticalOptions="Center"
-            Color="#00B09F" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
     </Grid>
 
 </ContentPage>

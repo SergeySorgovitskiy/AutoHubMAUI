@@ -4,46 +4,56 @@ using AutoHub.Services.NavigationService;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
 
 namespace AutoHub.MVVM.ViewModels
 {
     public partial class CatalogPageViewModel : ObservableObject
     {
-        private readonly IDataService _mockService;
+        private readonly IDataService _dataService;
         private readonly INavigationService _navigationService;
+        private readonly ILogger<CatalogPageViewModel> _logger;
 
         [ObservableProperty]
-        private List<CarListingModel> _cars;
+        private ObservableCollection<CarListingModel> _cars;
 
         [ObservableProperty]
         private bool _isLoading;
 
-        private readonly ILogger<CatalogPageViewModel> _logger;
-        public CatalogPageViewModel(IDataService mockService, INavigationService navigationService, ILogger<CatalogPageViewModel> logger)
+        [ObservableProperty]
+        private string? _searchQuery;
+
+        public CatalogPageViewModel(IDataService dataService, INavigationService navigationService, ILogger<CatalogPageViewModel> logger)
         {
-            _logger = logger;
-            _mockService = mockService;
+           
+            _dataService = dataService;
             _navigationService = navigationService;
-            _cars = new List<CarListingModel>();
+            _cars = new ObservableCollection<CarListingModel>();
         }
 
         [RelayCommand]
         private async Task GoToDetailsAsync(CarListingModel car)
         {
- 
-           await _navigationService.GoToDetailsAsync(car.Id);
+            if (car == null) return;
+            await _navigationService.GoToDetailsAsync(car.Id);
         }
 
         [RelayCommand]
         private async Task LoadCarsAsync()
         {
-            if (IsLoading)
-                return;
+
             try
             {
+                IsLoading = true;
 
-                var carList = await _mockService.GetListingsAsync();
-                Cars = new List<CarListingModel>(carList);
+                var carList = await _dataService.GetListingsAsync();
+
+                if (Cars.Count > 0) Cars.Clear();
+
+                foreach (var car in carList)
+                {
+                    Cars.Add(car);
+                }
             }
             catch (Exception ex)
             {

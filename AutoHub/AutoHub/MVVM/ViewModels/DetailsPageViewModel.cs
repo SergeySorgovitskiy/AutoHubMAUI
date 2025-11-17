@@ -3,6 +3,7 @@ using AutoHub.Services.DataService;
 using AutoHub.Services.NavigationService;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -11,18 +12,20 @@ namespace AutoHub.MVVM.ViewModels
     [QueryProperty(nameof(CarId), "Id")]
     public partial class DetailsPageViewModel : ObservableObject
     {
-        private readonly IDataService _mockService;
+        private readonly IDataService _dataService;
         private readonly INavigationService _navigationService;
-        public DetailsPageViewModel(INavigationService navigationService, IDataService mockService)
+        private readonly ILogger<CatalogPageViewModel> _logger;
+        public DetailsPageViewModel(INavigationService navigationService, IDataService dataService, ILogger<CatalogPageViewModel> logger)
         {
+            _logger = logger;
             _navigationService = navigationService;
-            _mockService = mockService;
+            _dataService = dataService;
             _images = new ObservableCollection<ImageUrlModel>();
             
         }
 
         [ObservableProperty]
-        private bool _isBusy;
+        private bool _isLoading;
 
         [ObservableProperty]
         private int _carId;
@@ -45,14 +48,14 @@ namespace AutoHub.MVVM.ViewModels
         [RelayCommand]
         private async Task LoadCarDetailsAsync()
         {
-            if (IsBusy) return;
+            if (IsLoading) return;
 
             try
             {
 
-                IsBusy = true;
+                IsLoading = true;
 
-                Car = await _mockService.GetDetailsByIdAsync(CarId);
+                Car = await _dataService.GetDetailsByIdAsync(CarId);
 
                 if (Car != null && Car.DetailsImagesUrls != null)
                 {
@@ -65,12 +68,11 @@ namespace AutoHub.MVVM.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[LoadCarDetailsAsync] Error: {ex.Message}");
-                await Application.Current.MainPage.DisplayAlert("Error", "Failed to load car details.", "OK");
+                _logger.LogError(ex, "Failed to load car list.");
             }
             finally
             {
-                IsBusy = false;
+                IsLoading = false;
             }
         }
     }

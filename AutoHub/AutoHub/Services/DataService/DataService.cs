@@ -99,12 +99,12 @@ namespace AutoHub.Services.DataService
         }
         public async Task<List<CarListingModel>> GetListingsAsync()
         {
-            await Task.Delay(2000);
+            await Task.Delay(500);
             return _cars;
         }
         public async Task<CarListingModel> GetDetailsByIdAsync(int carId)
         {
-            await Task.Delay(2000); 
+            await Task.Delay(500); 
             
             return _cars.FirstOrDefault(c => c.Id == carId);
         }

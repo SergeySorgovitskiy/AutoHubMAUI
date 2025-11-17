@@ -51,7 +51,7 @@
                         FontSize="Medium"
                         LineBreakMode="WordWrap"
                         Text="Thousands of verified listings"
-                        TextColor="#00B09F" />
+                        TextColor="{StaticResource ButtonGreen}" />
                     <Label
                         LineBreakMode="WordWrap"
                         Text="Smart filters, favorites and viewing history"
@@ -78,7 +78,7 @@
         <Border StrokeShape="10" StrokeThickness="1">
             <Button
                 x:Name="SignInButton"
-                BackgroundColor="#00B09F"
+                BackgroundColor="{StaticResource ButtonGreen}"
                 Command="{Binding LoginCommand}"
                 Text="Log in" />
         </Border>
@@ -89,12 +89,12 @@
             Text="{Binding ErrorMessage}"
             TextColor="Red" />
         <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-            <Label Text="Register" TextColor="#00B09F">
+            <Label Text="Register" TextColor="{StaticResource ButtonGreen}">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label Text="Forgot password?" TextColor="#00B09F">
+            <Label Text="Forgot password?" TextColor="{StaticResource ButtonGreen}">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
                 </Label.GestureRecognizers>
