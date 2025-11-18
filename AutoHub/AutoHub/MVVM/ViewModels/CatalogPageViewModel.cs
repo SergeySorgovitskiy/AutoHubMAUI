@@ -4,7 +4,6 @@ using AutoHub.Services.NavigationService;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using System.Collections.ObjectModel;
 
 namespace AutoHub.MVVM.ViewModels
 {
@@ -15,7 +14,7 @@ namespace AutoHub.MVVM.ViewModels
         private readonly ILogger<CatalogPageViewModel> _logger;
 
         [ObservableProperty]
-        private ObservableCollection<CarListingModel> _cars;
+        private List<CarListingModel> _cars = [];
 
         [ObservableProperty]
         private bool _isLoading;
@@ -28,7 +27,7 @@ namespace AutoHub.MVVM.ViewModels
            
             _dataService = dataService;
             _navigationService = navigationService;
-            _cars = new ObservableCollection<CarListingModel>();
+            
         }
 
         [RelayCommand]
@@ -48,12 +47,8 @@ namespace AutoHub.MVVM.ViewModels
 
                 var carList = await _dataService.GetListingsAsync();
 
-                if (Cars.Count > 0) Cars.Clear();
-
-                foreach (var car in carList)
-                {
-                    Cars.Add(car);
-                }
+                Cars = carList;
+                
             }
             catch (Exception ex)
             {
