@@ -1,4 +1,5 @@
-﻿using AutoHub.Services.NavigationService;
+﻿using AutoHub.Services.LoginService;
+using AutoHub.Services.NavigationService;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel.DataAnnotations;
@@ -8,10 +9,12 @@ namespace AutoHub.MVVM.ViewModels
     public partial class LoginPageViewModel : ObservableValidator
     {
         private readonly INavigationService _navigationService;
+        private readonly ILoginService _loginService;
 
-        public LoginPageViewModel(INavigationService navigationService)
+        public LoginPageViewModel(INavigationService navigationService, ILoginService loginService)
         {
             _navigationService = navigationService;
+            _loginService = loginService;
         }
 
         [ObservableProperty]
@@ -45,8 +48,16 @@ namespace AutoHub.MVVM.ViewModels
                 return;
             }
 
-            await _navigationService.GoToCatalogAsync();
-            
+            var user = await _loginService.LoginAsync(Email, Password);
+            if (user != null)
+            {
+                await _navigationService.GoToCatalogAsync();
+            }
+            else
+            {
+                ErrorMessage = "Invalid login or password";
+            }
+
         }
 
         [RelayCommand]

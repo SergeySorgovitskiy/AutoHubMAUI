@@ -6,7 +6,7 @@ namespace AutoHub.Services.NavigationService
     {
         public Task GoToLoginAsync()
         {
-            return Shell.Current.GoToAsync(nameof(LoginPage));
+            return Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
         public Task GoToRegisterAsync()
         {

@@ -1,4 +1,6 @@
-﻿using AutoHub.Services.NavigationService;
+﻿using AutoHub.MVVM.Models;
+using AutoHub.Services.NavigationService;
+using AutoHub.Services.RegisterService;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel.DataAnnotations;
@@ -8,9 +10,11 @@ namespace AutoHub.MVVM.ViewModels
     public partial class RegisterPageViewModel : ObservableValidator
     {
         private readonly INavigationService _navigationService;
-        public RegisterPageViewModel(INavigationService navigationService)
+        private readonly IRegisterService _registerService;
+        public RegisterPageViewModel(INavigationService navigationService, IRegisterService registerService)
         {
             _navigationService = navigationService;
+            _registerService = registerService;
         }
 
         [ObservableProperty]
@@ -88,7 +92,34 @@ namespace AutoHub.MVVM.ViewModels
                 return;
             }
 
-            await _navigationService.GoToCatalogAsync();
+            try
+            {
+                var newUser = new UserModel
+                {
+                    Name = Name,
+                    Email = Email,
+                    Password = Password,
+                    PhoneNumber = PhoneNumber
+                };
+
+                bool isSuccess = await _registerService.RegisterAsync(newUser);
+
+                if (isSuccess)
+                {
+                    await _navigationService.GoToLoginAsync();
+                }
+                else
+                {
+                    ErrorMessage = "A user with this email already eists.";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+            }
+
+
+                    
         }
 
         [RelayCommand]

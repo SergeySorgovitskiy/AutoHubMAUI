@@ -1,6 +1,6 @@
 ﻿using AutoHub.MVVM.Models;
-using AutoHub.Services.DataService;
 using AutoHub.Services.NavigationService;
+using AutoHub.Services.Repositories.ListingRepository;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -9,7 +9,7 @@ namespace AutoHub.MVVM.ViewModels
 {
     public partial class CatalogPageViewModel : ObservableObject
     {
-        private readonly IDataService _dataService;
+        private readonly IListingRepository _dataService;
         private readonly INavigationService _navigationService;
         private readonly ILogger<CatalogPageViewModel> _logger;
 
@@ -22,7 +22,7 @@ namespace AutoHub.MVVM.ViewModels
         [ObservableProperty]
         private string? _searchQuery;
 
-        public CatalogPageViewModel(IDataService dataService, INavigationService navigationService, ILogger<CatalogPageViewModel> logger)
+        public CatalogPageViewModel(IListingRepository dataService, INavigationService navigationService, ILogger<CatalogPageViewModel> logger)
         {
            
             _dataService = dataService;

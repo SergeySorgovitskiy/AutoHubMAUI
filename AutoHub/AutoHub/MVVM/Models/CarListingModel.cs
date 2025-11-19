@@ -13,6 +13,7 @@
         public bool IsElectric { get; set; }
         public string? Description { get; set; }
         public List<string>? DetailsImagesUrls { get; set; }
+        public int SellerUserId { get; set; }
 
     }
 }

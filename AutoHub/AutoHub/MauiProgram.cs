@@ -3,7 +3,11 @@ using Microsoft.Extensions.Logging;
 using AutoHub.MVVM.Views;
 using AutoHub.MVVM.ViewModels;
 using AutoHub.Services.NavigationService;
-using AutoHub.Services.DataService;
+using AutoHub.Services.LoginService;
+using AutoHub.Services.RegisterService;
+using AutoHub.Services.Repositories.ListingRepository;
+using AutoHub.Services.Repositories.UserRepository;
+using AutoHub.Services.AppMemoryStore;
 
 #if IOS
 using UIKit;
@@ -37,7 +41,12 @@ namespace AutoHub
             builder.Services.AddTransientWithShellRoute<CatalogPage, CatalogPageViewModel>(nameof(CatalogPage));
             builder.Services.AddTransientWithShellRoute<DetailsPage, DetailsPageViewModel>(nameof(DetailsPage));
             builder.Services.AddSingleton<INavigationService, NavigationService>();
-            builder.Services.AddSingleton<IDataService, DataService>();
+            builder.Services.AddSingleton<IListingRepository, ListingRepository>();
+            builder.Services.AddSingleton<IUserRepository, UserRepository>();
+            builder.Services.AddSingleton<ILoginService, LoginService>();
+            builder.Services.AddSingleton<IRegisterService, RegisterService>();
+            builder.Services.AddSingleton<Store>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

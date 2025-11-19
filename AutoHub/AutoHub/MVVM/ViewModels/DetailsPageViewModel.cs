@@ -1,6 +1,6 @@
 ﻿using AutoHub.MVVM.Models;
-using AutoHub.Services.DataService;
 using AutoHub.Services.NavigationService;
+using AutoHub.Services.Repositories.ListingRepository;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -12,10 +12,10 @@ namespace AutoHub.MVVM.ViewModels
     [QueryProperty(nameof(CarId), "Id")]
     public partial class DetailsPageViewModel : ObservableObject
     {
-        private readonly IDataService _dataService;
+        private readonly IListingRepository _dataService;
         private readonly INavigationService _navigationService;
         private readonly ILogger<CatalogPageViewModel> _logger;
-        public DetailsPageViewModel(INavigationService navigationService, IDataService dataService, ILogger<CatalogPageViewModel> logger)
+        public DetailsPageViewModel(INavigationService navigationService, IListingRepository dataService, ILogger<CatalogPageViewModel> logger)
         {
             _logger = logger;
             _navigationService = navigationService;
