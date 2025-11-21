@@ -1,0 +1,17 @@
+<ContentPage
+    x:Class="AutoHub.MVVM.Views.ProfilePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
+    x:DataType="viewModels:ProfilePageViewModel"
+    HideSoftInputOnTapped="True">
+
+    <VerticalStackLayout>
+        <Label
+            HorizontalOptions="Center"
+            Text="Welcome to .NET MAUI!"
+            VerticalOptions="Center" />
+    </VerticalStackLayout>
+
+</ContentPage>

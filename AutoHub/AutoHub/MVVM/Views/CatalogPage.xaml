@@ -22,7 +22,6 @@
             Margin="10,5"
             ColumnDefinitions="*, Auto"
             ColumnSpacing="10">
-
             <Border
                 Grid.Column="0"
                 BackgroundColor="White"
@@ -30,7 +29,6 @@
                 Stroke="LightGray"
                 StrokeShape="RoundRectangle 25"
                 StrokeThickness="1">
-
                 <Grid
                     Margin="10,0"
                     ColumnDefinitions="Auto, *"
@@ -49,7 +47,6 @@
                         VerticalOptions="Center" />
                 </Grid>
             </Border>
-
             <Button
                 Grid.Column="1"
                 BackgroundColor="{StaticResource LightGreenBackground}"
@@ -102,9 +99,7 @@
             Command="{Binding LoadCarsCommand}"
             IsRefreshing="{Binding IsLoading}"
             RefreshColor="{StaticResource ButtonGreen}">
-
             <CollectionView Margin="10,5" ItemsSource="{Binding Cars}">
-
                 <CollectionView.EmptyView>
                     <Label
                         HorizontalOptions="Center"
@@ -114,8 +109,7 @@
                 </CollectionView.EmptyView>
 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:CarListingModel">
-
+                    <DataTemplate x:DataType="models:ListingModel">
                         <Border
                             Margin="10,5"
                             Padding="0"
@@ -123,18 +117,50 @@
                             Stroke="LightGray"
                             StrokeShape="RoundRectangle 20"
                             StrokeThickness="1">
+
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:CatalogPageViewModel}}, Path=GoToDetailsCommand}" CommandParameter="{Binding .}" />
                             </Border.GestureRecognizers>
+
                             <Grid
                                 ColumnDefinitions="160,*"
                                 ColumnSpacing="10"
                                 IsClippedToBounds="True">
+
                                 <Image
                                     Grid.Column="0"
                                     Aspect="AspectFill"
                                     HeightRequest="100"
                                     Source="{Binding ImageUrl}" />
+
+                                <Image
+                                    Grid.Column="0"
+                                    Margin="8"
+                                    HeightRequest="24"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Start"
+                                    WidthRequest="24"
+                                    ZIndex="10">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:CatalogPageViewModel}}, Path=ToggleFavoriteCommand}" CommandParameter="{Binding .}" />
+                                    </Image.GestureRecognizers>
+
+                                    <Image.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsFavorite}"
+                                            TargetType="Image"
+                                            Value="True">
+                                            <Setter Property="Source" Value="heart_filled.svg" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding IsFavorite}"
+                                            TargetType="Image"
+                                            Value="False">
+                                            <Setter Property="Source" Value="heart_empty.svg" />
+                                        </DataTrigger>
+                                    </Image.Triggers>
+                                </Image>
+
                                 <Grid
                                     Grid.Column="1"
                                     Padding="0,10,10,10"
@@ -157,6 +183,7 @@
                                         FontSize="12"
                                         Text="{Binding Subtitle}"
                                         TextColor="{StaticResource DetailsGray}" />
+
                                     <HorizontalStackLayout
                                         Grid.Row="2"
                                         Spacing="10"
@@ -167,7 +194,6 @@
                                             IsVisible="{Binding IsElectric}"
                                             StrokeShape="RoundRectangle 10"
                                             StrokeThickness="0">
-
                                             <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
                                                 <Image
                                                     Aspect="AspectFit"
@@ -203,11 +229,8 @@
                                             Text="{Binding Location}"
                                             TextColor="{StaticResource DetailsGray}"
                                             VerticalOptions="Center" />
-
                                     </HorizontalStackLayout>
-
                                 </Grid>
-
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -215,5 +238,4 @@
             </CollectionView>
         </RefreshView>
     </Grid>
-
 </ContentPage>

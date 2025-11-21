@@ -6,20 +6,19 @@ using AutoHub.Services.Repositories.UserRepository;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using System.Collections.ObjectModel;
 
 namespace AutoHub.MVVM.ViewModels
 {
-    public partial class CatalogPageViewModel : ObservableObject
+    public partial class FavoritePageViewModel : ObservableObject
     {
-        private readonly IListingRepository _listingRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IListingRepository _listingService;
         private readonly INavigationService _navigationService;
-        private readonly ILoginService _loginService;
         private readonly ILogger<CatalogPageViewModel> _logger;
+        private readonly ILoginService _loginService;
+        private readonly IUserRepository _userRepository;
 
         [ObservableProperty]
-        private List<ListingModel> _cars = [];
+        private List<ListingModel> _favoriteCars = [];
 
         [ObservableProperty]
         private bool _isLoading;
@@ -27,12 +26,12 @@ namespace AutoHub.MVVM.ViewModels
         [ObservableProperty]
         private string? _searchQuery;
 
-        public CatalogPageViewModel(ILoginService loginService,IUserRepository userRepository, IListingRepository listingRepository, INavigationService navigationService, ILogger<CatalogPageViewModel> logger)
+        public FavoritePageViewModel(IUserRepository userRepository, IListingRepository listingService, INavigationService navigationService, ILogger<CatalogPageViewModel> logger, ILoginService loginService)
         {
-            _loginService = loginService;
-            _listingRepository = listingRepository;
-            _navigationService = navigationService;
             _userRepository = userRepository;
+            _listingService = listingService;
+            _navigationService = navigationService;
+            _loginService = loginService;
             _logger = logger;
         }
 
@@ -46,25 +45,24 @@ namespace AutoHub.MVVM.ViewModels
         [RelayCommand]
         private async Task LoadCarsAsync()
         {
-            IsLoading = true;
+            int userId = _loginService.CurrentUser.Id;
+
             try
             {
-                var list = await _listingRepository.GetListingsAsync();
-                var currentUser = _loginService.CurrentUser;
+                IsLoading = true;
 
-                foreach (var car in list)
+                var carList = await _listingService.GetFavoritesByUserIdAsync(userId);
+
+                foreach (var car in carList)
                 {
-                    if (currentUser != null && currentUser.FavoriteCarIds.Contains(car.Id))
-                    {
-                        car.IsFavorite = true;
-                    }
-                    else
-                    {
-                        car.IsFavorite = false;
-                    }
+                    car.IsFavorite = true;
                 }
 
-                Cars = new List<ListingModel>(list);
+                FavoriteCars = carList;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load car list.");
             }
             finally
             {
@@ -77,10 +75,15 @@ namespace AutoHub.MVVM.ViewModels
         {
             if (car == null) return;
 
-            car.IsFavorite = !car.IsFavorite;
-
             var userId = _loginService.CurrentUser.Id;
             await _userRepository.ToggleFavoriteAsync(userId, car.Id);
+
+            car.IsFavorite = false;
+
+            if (FavoriteCars.Contains(car))
+            {
+                await LoadCarsAsync();
+            }
         }
     }
 }

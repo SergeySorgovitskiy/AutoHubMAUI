@@ -62,7 +62,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<MauiXaml Update="MVVM\Views\AddListingPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="MVVM\Views\DetailsPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="MVVM\Views\FavoritePage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="MVVM\Views\ProfilePage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\LoginPage.xaml">
@@ -75,6 +84,15 @@
 
 	<ItemGroup>
 	  <Folder Include="Resources\AppIcon\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="MVVM\Views\AddListingPage.xaml.cs">
+	    <DependentUpon>AddListingPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="MVVM\Views\ProfilePage.xaml.cs">
+	    <DependentUpon>ProfilePage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

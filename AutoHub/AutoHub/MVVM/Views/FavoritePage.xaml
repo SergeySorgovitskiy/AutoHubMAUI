@@ -1,0 +1,173 @@
+<ContentPage
+    x:Class="AutoHub.MVVM.Views.FavoritePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:AutoHub.MVVM.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
+    x:DataType="viewModels:FavoritePageViewModel"
+    BackgroundColor="#F0F2F5"
+    HideSoftInputOnTapped="True">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Grid
+            Grid.Row="0"
+            Margin="10,5"
+            ColumnDefinitions="*, Auto"
+            ColumnSpacing="10">
+            <Border
+                Grid.Column="0"
+                BackgroundColor="White"
+                HeightRequest="50"
+                Stroke="LightGray"
+                StrokeShape="RoundRectangle 25"
+                StrokeThickness="1">
+                <Grid
+                    Margin="10,0"
+                    ColumnDefinitions="Auto, *"
+                    ColumnSpacing="10">
+                    <Image
+                        Grid.Column="0"
+                        HeightRequest="20"
+                        Source="search.svg"
+                        VerticalOptions="Center"
+                        WidthRequest="20" />
+                    <Entry
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        Placeholder="Search your favorites"
+                        Text="{Binding SearchQuery}"
+                        VerticalOptions="Center" />
+                </Grid>
+            </Border>
+            <Button
+                Grid.Column="1"
+                BackgroundColor="{StaticResource LightGreenBackground}"
+                ContentLayout="Left, 5"
+                CornerRadius="25"
+                HeightRequest="40"
+                ImageSource="options.svg"
+                Text="Filters"
+                TextColor="{StaticResource ButtonGreen}"
+                VerticalOptions="Center"
+                WidthRequest="100" />
+        </Grid>
+
+        <RefreshView
+            Grid.Row="2"
+            Command="{Binding LoadCarsCommand}"
+            IsRefreshing="{Binding IsLoading}"
+            RefreshColor="{StaticResource ButtonGreen}">
+            <CollectionView Margin="5" ItemsSource="{Binding FavoriteCars}">
+
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout
+                        HorizontalItemSpacing="10"
+                        Orientation="Vertical"
+                        Span="2"
+                        VerticalItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.EmptyView>
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label
+                            HorizontalOptions="Center"
+                            Text="No favorites yet"
+                            TextColor="{StaticResource ValidateGrayLabel}" />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ListingModel">
+                        <Border
+                            BackgroundColor="White"
+                            HeightRequest="210"
+                            Stroke="LightGray"
+                            StrokeShape="RoundRectangle 15"
+                            StrokeThickness="1">
+
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:FavoritePageViewModel}}, Path=GoToDetailsCommand}" CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid Padding="0" RowDefinitions="110, *">
+
+                                <Image
+                                    Grid.Row="0"
+                                    Aspect="AspectFill"
+                                    HorizontalOptions="Fill"
+                                    Source="{Binding ImageUrl}"
+                                    VerticalOptions="Fill" />
+
+                                <Image
+                                    Grid.Row="0"
+                                    Margin="8"
+                                    HeightRequest="24"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Start"
+                                    WidthRequest="24"
+                                    ZIndex="10">
+
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:FavoritePageViewModel}}, Path=ToggleFavoriteCommand}" CommandParameter="{Binding .}" />
+                                    </Image.GestureRecognizers>
+
+                                    <Image.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsFavorite}"
+                                            TargetType="Image"
+                                            Value="True">
+                                            <Setter Property="Source" Value="heart_filled.svg" />
+                                        </DataTrigger>
+                                        <DataTrigger
+                                            Binding="{Binding IsFavorite}"
+                                            TargetType="Image"
+                                            Value="False">
+                                            <Setter Property="Source" Value="heart_empty.svg" />
+                                        </DataTrigger>
+                                    </Image.Triggers>
+                                </Image>
+
+                                <VerticalStackLayout
+                                    Grid.Row="1"
+                                    Padding="10,5"
+                                    Spacing="2">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="15"
+                                        Text="{Binding Price, StringFormat='${0:N0}'}"
+                                        TextColor="{StaticResource ButtonGreen}" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="13"
+                                        LineBreakMode="TailTruncation"
+                                        Text="{Binding Title}"
+                                        TextColor="Black" />
+
+                                    <Label
+                                        FontSize="11"
+                                        LineBreakMode="TailTruncation"
+                                        TextColor="{StaticResource DetailsGray}">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0} &#x2022; {1:N0} mi">
+                                                <Binding Path="Location" />
+                                                <Binding Path="Mileage" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

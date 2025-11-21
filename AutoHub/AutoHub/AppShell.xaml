@@ -5,7 +5,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:AutoHub"
     xmlns:views="clr-namespace:AutoHub.MVVM.Views"
-    Title="AutoHub">
+    Title="AutoHub"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.TabBarForegroundColor="#00B09F"
+    Shell.TabBarTitleColor="#00B09F">
 
     <ShellContent
         Title="Login"
@@ -15,9 +18,25 @@
 
     <TabBar Route="MainApp">
         <ShellContent
-            Title="Catalog"
+            Title="Home"
             ContentTemplate="{DataTemplate views:CatalogPage}"
+            Icon="home_icon.svg"
             Route="CatalogPage" />
+        <ShellContent
+            Title="Favorites"
+            ContentTemplate="{DataTemplate views:FavoritePage}"
+            Icon="favorite_icon.svg"
+            Route="FavoritePage" />
+        <ShellContent
+            Title="Add"
+            ContentTemplate="{DataTemplate views:AddListingPage}"
+            Icon="add_icon.svg"
+            Route="AddListingPage" />
+        <ShellContent
+            Title="Profile"
+            ContentTemplate="{DataTemplate views:ProfilePage}"
+            Icon="profile_icon.svg"
+            Route="ProfilePage" />
     </TabBar>
 
 </Shell>

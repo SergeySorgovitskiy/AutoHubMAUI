@@ -7,6 +7,6 @@ namespace AutoHub.Services.Repositories.UserRepository
         Task<UserModel> GetUserAsync(string email, string password);
         Task<UserModel> GetUserByEmailAsync(string email);
         Task AddUserAsync(UserModel newUser);
-
+        Task ToggleFavoriteAsync(int userId, int listingId); 
     }
 }

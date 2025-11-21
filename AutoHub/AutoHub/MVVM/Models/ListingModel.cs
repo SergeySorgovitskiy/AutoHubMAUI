@@ -1,6 +1,8 @@
-﻿namespace AutoHub.MVVM.Models
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace AutoHub.MVVM.Models
 {
-    public class CarListingModel
+    public partial class ListingModel : ObservableObject
     {
         public int Id { get; set; }
         public int Year { get; set; }
@@ -15,5 +17,7 @@
         public List<string>? DetailsImagesUrls { get; set; }
         public int SellerUserId { get; set; }
 
+        [ObservableProperty]
+        private bool _isFavorite;
     }
 }

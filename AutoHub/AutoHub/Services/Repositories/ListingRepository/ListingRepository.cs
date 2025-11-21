@@ -10,17 +10,33 @@ namespace AutoHub.Services.Repositories.ListingRepository
         {
             _store = store;
         }
-            
-        public async Task<List<CarListingModel>> GetListingsAsync()
+        public async Task<List<ListingModel>> GetListingsAsync()
         {
             await Task.Delay(500);
-            return _store.Cars;
+
+            return _store.Listings;
         }
-        public async Task<CarListingModel> GetDetailsByIdAsync(int carId)
+        public async Task<ListingModel> GetDetailsByIdAsync(int carId)
         {
             await Task.Delay(500); 
             
-            return _store.Cars.FirstOrDefault(c => c.Id == carId);
+            return _store.Listings.FirstOrDefault(c => c.Id == carId);
+        }
+        public Task<List<ListingModel>> GetFavoritesByUserIdAsync(int userId)
+        {
+            
+            var user = _store.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (user == null || user.FavoriteCarIds == null || user.FavoriteCarIds.Count == 0)
+            {
+                return Task.FromResult(new List<ListingModel>());
+            }
+
+            var favoriteListings = _store.Listings
+                .Where(car => user.FavoriteCarIds.Contains(car.Id))
+                .ToList();
+
+            return Task.FromResult(favoriteListings);
         }
     }
-}
+} 

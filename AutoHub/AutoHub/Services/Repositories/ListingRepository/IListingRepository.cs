@@ -4,8 +4,9 @@ namespace AutoHub.Services.Repositories.ListingRepository
 {
     public interface IListingRepository
     {
-        Task<List<CarListingModel>> GetListingsAsync();
-        Task<CarListingModel> GetDetailsByIdAsync(int carId);
+        Task<List<ListingModel>> GetListingsAsync();
+        Task<ListingModel> GetDetailsByIdAsync(int carId);
+        Task<List<ListingModel>> GetFavoritesByUserIdAsync(int userId);
 
     }
 

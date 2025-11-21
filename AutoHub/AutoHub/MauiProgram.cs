@@ -40,6 +40,7 @@ namespace AutoHub
             builder.Services.AddTransientWithShellRoute<RegisterPage, RegisterPageViewModel>(nameof(RegisterPage));
             builder.Services.AddTransientWithShellRoute<CatalogPage, CatalogPageViewModel>(nameof(CatalogPage));
             builder.Services.AddTransientWithShellRoute<DetailsPage, DetailsPageViewModel>(nameof(DetailsPage));
+            builder.Services.AddTransientWithShellRoute<FavoritePage, FavoritePageViewModel>(nameof(FavoritePage));
             builder.Services.AddSingleton<INavigationService, NavigationService>();
             builder.Services.AddSingleton<IListingRepository, ListingRepository>();
             builder.Services.AddSingleton<IUserRepository, UserRepository>();

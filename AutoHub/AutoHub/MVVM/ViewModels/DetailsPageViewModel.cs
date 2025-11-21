@@ -31,7 +31,7 @@ namespace AutoHub.MVVM.ViewModels
         private int _carId;
 
         [ObservableProperty]
-        private CarListingModel _car;
+        private ListingModel _car;
 
         [ObservableProperty]
         private ObservableCollection<ImageUrlModel> _images; 
