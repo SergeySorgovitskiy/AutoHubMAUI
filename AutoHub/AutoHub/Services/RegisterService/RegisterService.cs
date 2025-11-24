@@ -13,6 +13,7 @@ namespace AutoHub.Services.RegisterService
         public async Task<bool> RegisterAsync(UserModel newUser)
         {
             await Task.Delay(1000);
+
             var existingUser = await _userRepository.GetUserByEmailAsync(newUser.Email);
 
             if (existingUser != null)
