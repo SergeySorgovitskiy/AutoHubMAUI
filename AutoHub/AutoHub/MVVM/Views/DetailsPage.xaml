@@ -1,0 +1,139 @@
+<ContentPage
+    x:Class="AutoHub.MVVM.Views.DetailsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:AutoHub.MVVM.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
+    x:DataType="viewModels:DetailsPageViewModel"
+    BackgroundColor="#F0F2F5"
+    HideSoftInputOnTapped="True">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+
+        <ActivityIndicator
+            HeightRequest="50"
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            WidthRequest="50"
+            ZIndex="1"
+            Color="#00B09F" />
+
+        <Grid IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" RowDefinitions="300, *">
+
+            <Grid Grid.Row="0">
+
+                <CarouselView
+                    x:Name="ImageCarousel"
+                    IndicatorView="{x:Reference Indicator}"
+                    ItemsSource="{Binding Images}">
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ImageUrlModel">
+                            <Image
+                                Aspect="AspectFill"
+                                HeightRequest="300"
+                                Source="{Binding Url}" />
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+
+                <IndicatorView
+                    x:Name="Indicator"
+                    Margin="0,0,0,15"
+                    HorizontalOptions="Center"
+                    IndicatorColor="Gray"
+                    IndicatorSize="8"
+                    SelectedIndicatorColor="White"
+                    VerticalOptions="End" />
+            </Grid>
+
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20" Spacing="15">
+                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="24"
+                                Text="{Binding Car.Title}" />
+                            <Label
+                                FontSize="16"
+                                Text="{Binding Car.Subtitle}"
+                                TextColor="{StaticResource DetailsGray}" />
+                        </VerticalStackLayout>
+
+                        <Label
+                            Grid.Column="1"
+                            FontAttributes="Bold"
+                            FontSize="24"
+                            Text="{Binding Car.Price, StringFormat='${0:N0}'}"
+                            TextColor="{StaticResource ButtonGreen}" />
+                    </Grid>
+
+                    <HorizontalStackLayout
+                        Grid.Row="2"
+                        Spacing="10"
+                        VerticalOptions="End">
+
+                        <Border
+                            Padding="8,4"
+                            BackgroundColor="#E0F2F1"
+                            IsVisible="{Binding Car.IsElectric}"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="0">
+                            <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                                <Image
+                                    Aspect="AspectFit"
+                                    HeightRequest="12"
+                                    Source="electro.png"
+                                    WidthRequest="12" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="12"
+                                    Text="EV"
+                                    TextColor="{StaticResource ButtonGreen}"
+                                    VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
+
+                        <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                            <Image
+                                Aspect="AspectFit"
+                                HeightRequest="14"
+                                Source="mileage.png"
+                                WidthRequest="14" />
+                            <Label
+                                FontSize="12"
+                                Text="{Binding Car.Mileage, StringFormat='{0:N0} mi'}"
+                                TextColor="{StaticResource DetailsGray}"
+                                VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                            <Image
+                                Aspect="AspectFit"
+                                HeightRequest="14"
+                                Source="location.png"
+                                WidthRequest="14" />
+                            <Label
+                                FontSize="12"
+                                Text="{Binding Car.Location}"
+                                TextColor="{StaticResource DetailsGray}"
+                                VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

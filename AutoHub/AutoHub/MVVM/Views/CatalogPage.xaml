@@ -1,0 +1,219 @@
+<ContentPage
+    x:Class="AutoHub.MVVM.Views.CatalogPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:AutoHub.MVVM.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
+    x:DataType="viewModels:CatalogPageViewModel"
+    BackgroundColor="#F0F2F5"
+    HideSoftInputOnTapped="True">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, Auto, *">
+
+        <Grid
+            Grid.Row="0"
+            Margin="10,5"
+            ColumnDefinitions="*, Auto"
+            ColumnSpacing="10">
+
+            <Border
+                Grid.Column="0"
+                BackgroundColor="White"
+                HeightRequest="50"
+                Stroke="LightGray"
+                StrokeShape="RoundRectangle 25"
+                StrokeThickness="1">
+
+                <Grid
+                    Margin="10,0"
+                    ColumnDefinitions="Auto, *"
+                    ColumnSpacing="10">
+                    <Image
+                        Grid.Column="0"
+                        HeightRequest="20"
+                        Source="search.svg"
+                        VerticalOptions="Center"
+                        WidthRequest="20" />
+                    <Entry
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        Placeholder="Search makes, models, or keywords..."
+                        Text="{Binding SearchQuery}"
+                        VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <Button
+                Grid.Column="1"
+                BackgroundColor="{StaticResource LightGreenBackground}"
+                ContentLayout="Left, 5"
+                CornerRadius="25"
+                HeightRequest="40"
+                ImageSource="options.svg"
+                Text="Filters"
+                TextColor="{StaticResource ButtonGreen}"
+                VerticalOptions="Center"
+                WidthRequest="100" />
+        </Grid>
+
+        <ScrollView
+            Grid.Row="1"
+            Padding="10,0"
+            HorizontalOptions="Center"
+            Orientation="Horizontal">
+            <HorizontalStackLayout Spacing="10">
+                <Button
+                    BackgroundColor="{StaticResource LightGreenBackground}"
+                    CornerRadius="15"
+                    Text="Make"
+                    TextColor="{StaticResource ButtonGreen}" />
+                <Button
+                    BackgroundColor="{StaticResource LightGreenBackground}"
+                    CornerRadius="15"
+                    Text="Model"
+                    TextColor="{StaticResource ButtonGreen}" />
+                <Button
+                    BackgroundColor="{StaticResource LightGreenBackground}"
+                    CornerRadius="15"
+                    Text="Price"
+                    TextColor="{StaticResource ButtonGreen}" />
+                <Button
+                    BackgroundColor="{StaticResource LightGreenBackground}"
+                    CornerRadius="15"
+                    Text="Year"
+                    TextColor="{StaticResource ButtonGreen}" />
+                <Button
+                    BackgroundColor="{StaticResource LightGreenBackground}"
+                    CornerRadius="15"
+                    Text="Mileage"
+                    TextColor="{StaticResource ButtonGreen}" />
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <RefreshView
+            Grid.Row="2"
+            Command="{Binding LoadCarsCommand}"
+            IsRefreshing="{Binding IsLoading}"
+            RefreshColor="{StaticResource ButtonGreen}">
+
+            <CollectionView Margin="10,5" ItemsSource="{Binding Cars}">
+
+                <CollectionView.EmptyView>
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="No cars found"
+                        TextColor="{StaticResource ValidateGrayLabel}"
+                        VerticalOptions="Center" />
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:CarListingModel">
+
+                        <Border
+                            Margin="10,5"
+                            Padding="0"
+                            BackgroundColor="White"
+                            Stroke="LightGray"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="1">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:CatalogPageViewModel}}, Path=GoToDetailsCommand}" CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid
+                                ColumnDefinitions="160,*"
+                                ColumnSpacing="10"
+                                IsClippedToBounds="True">
+                                <Image
+                                    Grid.Column="0"
+                                    Aspect="AspectFill"
+                                    HeightRequest="100"
+                                    Source="{Binding ImageUrl}" />
+                                <Grid
+                                    Grid.Column="1"
+                                    Padding="0,10,10,10"
+                                    RowDefinitions="Auto, Auto, *">
+                                    <Grid Grid.Row="0" ColumnDefinitions="*, Auto">
+                                        <Label
+                                            Grid.Column="0"
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            Text="{Binding Title}" />
+                                        <Label
+                                            Grid.Column="1"
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            HorizontalOptions="End"
+                                            Text="{Binding Price, StringFormat='${0:N0}'}" />
+                                    </Grid>
+                                    <Label
+                                        Grid.Row="1"
+                                        FontSize="12"
+                                        Text="{Binding Subtitle}"
+                                        TextColor="{StaticResource DetailsGray}" />
+                                    <HorizontalStackLayout
+                                        Grid.Row="2"
+                                        Spacing="10"
+                                        VerticalOptions="End">
+                                        <Border
+                                            Padding="8,4"
+                                            BackgroundColor="#E0F2F1"
+                                            IsVisible="{Binding IsElectric}"
+                                            StrokeShape="RoundRectangle 10"
+                                            StrokeThickness="0">
+
+                                            <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                                                <Image
+                                                    Aspect="AspectFit"
+                                                    HeightRequest="12"
+                                                    Source="electro.svg"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="12" />
+                                                <Label
+                                                    FontAttributes="Bold"
+                                                    FontSize="11"
+                                                    Text="EV"
+                                                    TextColor="{StaticResource ButtonGreen}"
+                                                    VerticalOptions="Center" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+
+                                        <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                                            <Image
+                                                Aspect="AspectFit"
+                                                HeightRequest="12"
+                                                Source="mileage.svg"
+                                                VerticalOptions="Center"
+                                                WidthRequest="12" />
+                                            <Label
+                                                FontSize="11"
+                                                Text="{Binding Mileage, StringFormat='{0:N0} mi'}"
+                                                TextColor="{StaticResource DetailsGray}"
+                                                VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+
+                                        <Label
+                                            FontSize="11"
+                                            Text="{Binding Location}"
+                                            TextColor="{StaticResource DetailsGray}"
+                                            VerticalOptions="Center" />
+
+                                    </HorizontalStackLayout>
+
+                                </Grid>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+
+</ContentPage>
