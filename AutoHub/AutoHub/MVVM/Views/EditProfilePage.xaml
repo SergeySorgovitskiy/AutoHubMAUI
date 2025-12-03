@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AutoHub.MVVM.Views.EditProfilePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
+    Title="Edit Profile"
+    x:DataType="viewModels:EditProfilePageViewModel"
+    BackgroundColor="#F0F2F5"
+    HideSoftInputOnTapped="True">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <ActivityIndicator
+                HorizontalOptions="Center"
+                IsRunning="{Binding IsLoading}"
+                IsVisible="{Binding IsLoading}" />
+
+            <Border
+                Padding="20"
+                BackgroundColor="White"
+                StrokeShape="15"
+                StrokeThickness="0">
+                <VerticalStackLayout Spacing="15">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        Text="Profile Photo" />
+
+                    <Border
+                        HeightRequest="100"
+                        HorizontalOptions="Center"
+                        StrokeShape="RoundRectangle 50"
+                        StrokeThickness="0"
+                        WidthRequest="100">
+                        <Image Aspect="AspectFill" Source="{Binding ProfileImage}" />
+                    </Border>
+
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <Border
+                            Grid.Column="0"
+                            Padding="15"
+                            BackgroundColor="{StaticResource LightGreenBackground}"
+                            StrokeShape="10"
+                            StrokeThickness="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding TakePhotoCommand}" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout
+                                HorizontalOptions="Center"
+                                Spacing="8"
+                                VerticalOptions="Center">
+                                <Image
+                                    HeightRequest="30"
+                                    Source="camera_icon.svg"
+                                    WidthRequest="30" />
+                                <Label
+                                    FontSize="12"
+                                    HorizontalOptions="Center"
+                                    Text="Camera"
+                                    TextColor="{StaticResource Gray600}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border
+                            Grid.Column="1"
+                            Padding="15"
+                            BackgroundColor="{StaticResource LightGreenBackground}"
+                            StrokeShape="10"
+                            StrokeThickness="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding PickPhotoCommand}" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout
+                                HorizontalOptions="Center"
+                                Spacing="8"
+                                VerticalOptions="Center">
+                                <Image
+                                    HeightRequest="30"
+                                    Source="gallery_icon.svg"
+                                    WidthRequest="30" />
+                                <Label
+                                    FontSize="12"
+                                    HorizontalOptions="Center"
+                                    Text="Gallery"
+                                    TextColor="{StaticResource Gray600}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border
+                Padding="15"
+                BackgroundColor="White"
+                StrokeShape="10"
+                StrokeThickness="0">
+                <Entry Placeholder="Name" Text="{Binding Name}" />
+            </Border>
+
+            <Border
+                Padding="15"
+                BackgroundColor="White"
+                StrokeShape="10"
+                StrokeThickness="0">
+                <Entry
+                    Keyboard="Email"
+                    Placeholder="Email"
+                    Text="{Binding Email}" />
+            </Border>
+
+            <Border
+                Padding="15"
+                BackgroundColor="White"
+                StrokeShape="10"
+                StrokeThickness="0">
+                <Entry
+                    Keyboard="Telephone"
+                    Placeholder="Phone Number"
+                    Text="{Binding PhoneNumber}" />
+            </Border>
+
+            <Button
+                BackgroundColor="{StaticResource ButtonGreen}"
+                Command="{Binding SaveProfileCommand}"
+                FontAttributes="Bold"
+                FontSize="16"
+                IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                Text="Save Profile"
+                TextColor="White" />
+
+            <Label
+                HorizontalOptions="Center"
+                IsVisible="{Binding HasErrorMessage}"
+                Text="{Binding ErrorMessage}"
+                TextColor="Red" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

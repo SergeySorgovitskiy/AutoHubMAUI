@@ -9,6 +9,8 @@ namespace AutoHub.Services.NavigationService
         Task GoToCatalogAsync();
         Task GoBackAsync();
         Task GoToDetailsAsync(int carId);
+        Task GoToEditAsync(int carId);
+        Task GoToMyListingsAsync(int userId);
 
     }
 }

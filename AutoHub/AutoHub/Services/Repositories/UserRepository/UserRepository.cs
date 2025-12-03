@@ -1,52 +1,71 @@
 ﻿using AutoHub.MVVM.Models;
-using AutoHub.Services.AppMemoryStore;
+using AutoHub.Services.DbService;
+using SQLite;
 
 namespace AutoHub.Services.Repositories.UserRepository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository(IDbService dbService) : IUserRepository
     {
-        private readonly Store _store;
-        public UserRepository(Store store)
-        {
-            _store = store;
-        }
-        public Task<UserModel> GetUserAsync(string email, string password)
-        {
-            var user = _store.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
+        private SQLiteAsyncConnection Connection => dbService.GetConnection();
 
-            return Task.FromResult(user);
-        }
-        public Task<UserModel> GetUserByEmailAsync(string email)
+        public async Task<UserModel?> GetUserByIdAsync(int userId)
         {
-            var user = _store.Users.FirstOrDefault(u => u.Email == email);
+            return await Connection.Table<UserModel>()
+                .Where(u => u.Id == userId)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<UserModel?> GetUserAsync(string email, string password)
+        {
+            return await Connection.Table<UserModel>()
+                .Where(u => u.Email == email && u.Password == password)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<UserModel?> GetUserByEmailAsync(string email)
+        {
+            return await Connection.Table<UserModel>()
+                .Where(u => u.Email == email)
+                .FirstOrDefaultAsync();
+        }
+        public async Task AddUserAsync(UserModel newUser)
+        {
+           await Connection.InsertAsync(newUser);
+        }
 
-            return Task.FromResult(user);
-        }
-        public Task AddUserAsync(UserModel newUser)
+        public async Task UpdateUserAsync(UserModel user)
         {
-            newUser.Id = _store.Users.Count + 1;
-            _store.Users.Add(newUser);
+            await Connection.UpdateAsync(user);
+        }
+        public async Task ToggleFavoriteAsync(int userId, int listingId)
+        {
+            var existingFavorite = await Connection.Table<FavoriteModel>()
+                .Where(f => f.UserId == userId && f.ListingId == listingId)
+                .FirstOrDefaultAsync();
 
-            return Task.CompletedTask;
-        }
-        public Task ToggleFavoriteAsync(int userId, int listingId)
-        {
-            var user = _store.Users.FirstOrDefault(u => u.Id == userId);
-            if (user == null)
+            if (existingFavorite != null)
             {
-                return Task.CompletedTask;
+                await Connection.DeleteAsync(existingFavorite);
             }
 
-            if(user.FavoriteCarIds.Contains(listingId))
-            {
-                user.FavoriteCarIds.Remove(listingId);
-            }
             else
             {
-                user.FavoriteCarIds.Add(listingId);
+                var newFavorite = new FavoriteModel
+                {
+                    UserId = userId,
+                    ListingId = listingId,
+                    AddedDate = DateTime.UtcNow
+                };
+
+                await Connection.InsertAsync(newFavorite);
             }
-                
-            return Task.CompletedTask;
+        }
+
+        public async Task<List<int>> GetFavoriteIdsAsync(int userId)
+        {
+            var favorites = await Connection.Table<FavoriteModel>()
+                .Where(f => f.UserId == userId)
+                .ToListAsync();
+
+            return favorites.Select(f => f.ListingId).ToList();
         }
     }
 

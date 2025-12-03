@@ -18,7 +18,7 @@ namespace AutoHub.Services.NavigationService
         }
         public Task GoToCatalogAsync()
         {
-            return Shell.Current.GoToAsync($"//{nameof(CatalogPage)}"); 
+            return Shell.Current.GoToAsync($"//{nameof(CatalogPage)}");
         }
         public Task GoBackAsync()
         {
@@ -27,6 +27,15 @@ namespace AutoHub.Services.NavigationService
         public Task GoToDetailsAsync(int carId)
         {
             return Shell.Current.GoToAsync($"{nameof(DetailsPage)}?Id={carId}");
+        }
+        public Task GoToEditAsync(int carId)
+        {
+            return Shell.Current.GoToAsync($"{nameof(EditPage)}?Id={carId}");
+        }
+
+        public Task GoToMyListingsAsync(int userId)
+        {
+            return Shell.Current.GoToAsync($"{nameof(MyListingsPage)}?Id={userId}");
         }
     }
 }

@@ -2,15 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net10.0-tizen</TargetFrameworks> -->
-
-		<!-- Note for MacCatalyst:
-		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
-		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
-		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
-		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 		<MauiXamlInfator>SourceGen</MauiXamlInfator>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>AutoHub</RootNamespace>
@@ -18,6 +9,7 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
 
 		<!-- Display name -->
 		<ApplicationTitle>AutoHub</ApplicationTitle>
@@ -35,6 +27,11 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		
+		<SupportedAbis Condition="'$(TargetFramework)' == 'net10.0-android'">armeabi-v7a;arm64-v8a;x86;x86_64</SupportedAbis>
+		<RuntimeIdentifiers Condition="'$(TargetFramework)' == 'net10.0-android'">android-arm;android-arm64;android-x86;android-x64</RuntimeIdentifiers>
+		
+		<AndroidPageSize Condition="'$(TargetFramework)' == 'net10.0-android'">16384</AndroidPageSize>
+		<NoWarn>$(NoWarn);XA0141</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -59,6 +56,7 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -68,7 +66,13 @@
 		<MauiXaml Update="MVVM\Views\DetailsPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="MVVM\Views\EditPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="MVVM\Views\FavoritePage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="MVVM\Views\MyListingsPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="MVVM\Views\ProfilePage.xaml">
@@ -89,6 +93,9 @@
 	<ItemGroup>
 	  <Compile Update="MVVM\Views\AddListingPage.xaml.cs">
 	    <DependentUpon>AddListingPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="MVVM\Views\MyListingsPage.xaml.cs">
+	    <DependentUpon>MyListingsPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="MVVM\Views\ProfilePage.xaml.cs">
 	    <DependentUpon>ProfilePage.xaml</DependentUpon>

@@ -8,6 +8,11 @@
             {
                 handler.PlatformView.Background = null;
             });
+            Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+            {
+                handler.PlatformView.Background = null;
+            });
         }
+
     }
 }

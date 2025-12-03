@@ -1,4 +1,4 @@
-﻿namespace AutoHub.MVVM.Models 
+﻿namespace AutoHub.MVVM.Models
 {
     public record ImageUrlModel(string Url);
 

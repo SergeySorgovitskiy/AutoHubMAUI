@@ -60,39 +60,7 @@
                 WidthRequest="100" />
         </Grid>
 
-        <ScrollView
-            Grid.Row="1"
-            Padding="10,0"
-            HorizontalOptions="Center"
-            Orientation="Horizontal">
-            <HorizontalStackLayout Spacing="10">
-                <Button
-                    BackgroundColor="{StaticResource LightGreenBackground}"
-                    CornerRadius="15"
-                    Text="Make"
-                    TextColor="{StaticResource ButtonGreen}" />
-                <Button
-                    BackgroundColor="{StaticResource LightGreenBackground}"
-                    CornerRadius="15"
-                    Text="Model"
-                    TextColor="{StaticResource ButtonGreen}" />
-                <Button
-                    BackgroundColor="{StaticResource LightGreenBackground}"
-                    CornerRadius="15"
-                    Text="Price"
-                    TextColor="{StaticResource ButtonGreen}" />
-                <Button
-                    BackgroundColor="{StaticResource LightGreenBackground}"
-                    CornerRadius="15"
-                    Text="Year"
-                    TextColor="{StaticResource ButtonGreen}" />
-                <Button
-                    BackgroundColor="{StaticResource LightGreenBackground}"
-                    CornerRadius="15"
-                    Text="Mileage"
-                    TextColor="{StaticResource ButtonGreen}" />
-            </HorizontalStackLayout>
-        </ScrollView>
+
 
         <RefreshView
             Grid.Row="2"

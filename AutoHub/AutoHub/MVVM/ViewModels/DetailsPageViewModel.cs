@@ -1,39 +1,35 @@
 ﻿using AutoHub.MVVM.Models;
-using AutoHub.Services.NavigationService;
 using AutoHub.Services.Repositories.ListingRepository;
+using AutoHub.Services.Repositories.UserRepository;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
 namespace AutoHub.MVVM.ViewModels
 {
     [QueryProperty(nameof(CarId), "Id")]
-    public partial class DetailsPageViewModel : ObservableObject
+    public partial class DetailsPageViewModel(
+        IListingRepository dataService,
+        IUserRepository userRepository) : ObservableObject
     {
-        private readonly IListingRepository _dataService;
-        private readonly INavigationService _navigationService;
-        private readonly ILogger<CatalogPageViewModel> _logger;
-        public DetailsPageViewModel(INavigationService navigationService, IListingRepository dataService, ILogger<CatalogPageViewModel> logger)
-        {
-            _logger = logger;
-            _navigationService = navigationService;
-            _dataService = dataService;
-            _images = new ObservableCollection<ImageUrlModel>();
-            
-        }
 
         [ObservableProperty]
-        private bool _isLoading;
+        public partial UserModel? Seller { get; set; }
 
         [ObservableProperty]
-        private int _carId;
+        public partial bool IsLoading { get; set; }
 
         [ObservableProperty]
-        private ListingModel _car;
+        public partial int CarId { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<ImageUrlModel> _images; 
+        public partial ListingModel? Car { get; set; }
+
+        [ObservableProperty]
+        private ObservableCollection<ImageUrlModel> _images = new();
+
+        [ObservableProperty]
+        public partial string? ErrorMessage { get; set; }
 
         partial void OnCarIdChanged(int value)
         {
@@ -43,7 +39,6 @@ namespace AutoHub.MVVM.ViewModels
             }
         }
 
-
         [RelayCommand]
         private async Task LoadCarDetailsAsync()
         {
@@ -51,13 +46,15 @@ namespace AutoHub.MVVM.ViewModels
 
             try
             {
-
                 IsLoading = true;
 
-                Car = await _dataService.GetDetailsByIdAsync(CarId);
+                var carDetails = await dataService.GetDetailsByIdAsync(CarId);
+                Car = carDetails;
 
-                if (Car != null && Car.DetailsImagesUrls != null)
+                if (Car != null && Car.DetailsImagesUrls != null && Car.SellerUserId > 0)
                 {
+                    Seller = await userRepository.GetUserByIdAsync(Car.SellerUserId);
+
                     Images.Clear();
                     foreach (var url in Car.DetailsImagesUrls)
                     {
@@ -67,7 +64,7 @@ namespace AutoHub.MVVM.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to load car list.");
+                ErrorMessage = $"Failed to load car details: {ex.Message}";
             }
             finally
             {

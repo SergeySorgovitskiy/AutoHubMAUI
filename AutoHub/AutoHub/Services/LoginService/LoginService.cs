@@ -3,20 +3,13 @@ using AutoHub.Services.Repositories.UserRepository;
 
 namespace AutoHub.Services.LoginService
 {
-    public class LoginService : ILoginService
+    public class LoginService(IUserRepository userRepository) : ILoginService
     {
-        private readonly IUserRepository _userRepository;
-        public UserModel CurrentUser { get; private set; }
-        public LoginService(IUserRepository userRepository)
+        public UserModel? CurrentUser { get; private set; }
+        public async Task<UserModel?> LoginAsync(string email, string password)
         {
-           _userRepository = userRepository;
            
-        }
-        public async Task<UserModel> LoginAsync(string email, string password)
-        {
-            await Task.Delay(1000);
-
-            var user = await _userRepository.GetUserAsync(email, password);
+            var user = await userRepository.GetUserAsync(email, password);
 
             if (user != null)
             {
@@ -24,6 +17,12 @@ namespace AutoHub.Services.LoginService
             }
 
             return user;
+        }
+
+        public Task LogoutAsync()
+        {
+            CurrentUser = null;
+            return Task.CompletedTask;
         }
     }
 }

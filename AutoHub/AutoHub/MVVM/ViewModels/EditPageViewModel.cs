@@ -10,12 +10,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AutoHub.MVVM.ViewModels
 {
-    public partial class AddListingPageViewModel(
+
+    [QueryProperty(nameof(CarId), "Id")]
+    public partial class EditPageViewModel(
             IListingRepository listingRepository,
             ILoginService loginService,
             INavigationService navigationService,
             IPhotoService photoService) : ObservableValidator
+
     {
+
+        [ObservableProperty]
+        public partial ListingModel? CurrentCar { get; set; }
+
+        [ObservableProperty]
+        public partial int CarId { get; set; }
 
         [ObservableProperty]
         private ObservableCollection<ImageSource> _selectedImages = new();
@@ -113,8 +122,10 @@ namespace AutoHub.MVVM.ViewModels
             SelectedImages.Add(imageSource);
             SelectedImagePaths.Add(photo.FullPath);
         }
-        public void ClearForm()
+
+        private void ClearForm()
         {
+            CurrentCar = null;
             Title = string.Empty;
             Subtitle = string.Empty;
             YearText = string.Empty;
@@ -130,6 +141,74 @@ namespace AutoHub.MVVM.ViewModels
             Price = 0;
             Mileage = 0;
         }
+
+        partial void OnCarIdChanged(int value)
+        {
+            ClearForm();
+            if (value > 0)
+            {
+                Task.Run(() => LoadCarDetailsAsync(value));
+            }
+        }
+
+        private async Task LoadCarDetailsAsync(int carId)
+        {
+            if (carId == 0)
+            {
+                ClearForm();
+                return;
+            }
+
+            try 
+            {
+                IsLoading = true;
+                ErrorMessage = string.Empty;
+
+                var car = await listingRepository.GetDetailsByIdAsync(carId);
+
+                if(car != null)
+                {
+                    CurrentCar = car;
+
+                    Title = car.Title ?? string.Empty;
+                    Subtitle = car.Subtitle ?? string.Empty;
+                    Location = car.Location ?? string.Empty;
+                    Description = car.Description ?? string.Empty;
+                    IsElectric = car.IsElectric;
+
+                    YearText = car.Year.ToString();
+                    PriceText = car.Price.ToString();
+                    MileageText = car.Mileage.ToString();
+
+                    SelectedImagePaths.Clear();
+                    SelectedImages.Clear();
+
+                    if (car.DetailsImagesUrls != null)
+                    {
+                        foreach (var path in car.DetailsImagesUrls)
+                        {
+                            SelectedImagePaths.Add(path);
+                            SelectedImages.Add(ImageSource.FromFile(path));
+                        }
+                    }
+                }
+                else
+                {
+                    ClearForm();
+                    ErrorMessage = "Listing not found";
+                }
+            }
+            catch (Exception ex)
+            {
+                ClearForm();
+                ErrorMessage = $"Failed to load car details: {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
 
         [RelayCommand]
         private async Task PickPhotoAsync()
@@ -201,7 +280,7 @@ namespace AutoHub.MVVM.ViewModels
 
 
         [RelayCommand]
-        private async Task AddListingAsync()
+        private async Task SaveListingAsync()
         {
             ErrorMessage = string.Empty;
 
@@ -247,32 +326,28 @@ namespace AutoHub.MVVM.ViewModels
             {
                 IsLoading = true;
 
-                var mainImageUrl = SelectedImagePaths.Count > 0 ? SelectedImagePaths[0] : null;
+                var listingToSave = CurrentCar ?? new ListingModel();
 
-                var newListing = new ListingModel
-                {
-                    Title = Title,
-                    Subtitle = string.IsNullOrWhiteSpace(Subtitle) ? null : Subtitle,
-                    Year = Year,
-                    Price = Price,
-                    Mileage = Mileage,
-                    Location = string.IsNullOrWhiteSpace(Location) ? null : Location,
-                    Description = string.IsNullOrWhiteSpace(Description) ? null : Description,
-                    ImageUrl = mainImageUrl,
-                    IsElectric = IsElectric,
-                    SellerUserId = currentUser.Id,
-                    DetailsImagesUrls = SelectedImagePaths.ToList()
-                };
+                var mainImageUrl = SelectedImagePaths.Count > 0 ? SelectedImagePaths[0] : listingToSave.ImageUrl;
 
-                await listingRepository.AddListingAsync(newListing);
+                listingToSave.Title = Title;
+                listingToSave.Subtitle = string.IsNullOrWhiteSpace(Subtitle) ? null : Subtitle;
+                listingToSave.Year = Year;
+                listingToSave.Price = Price;
+                listingToSave.Mileage = Mileage;
+                listingToSave.Location = string.IsNullOrWhiteSpace(Location) ? null : Location;
+                listingToSave.Description = string.IsNullOrWhiteSpace(Description) ? null : Description;
+                listingToSave.IsElectric = IsElectric;
+                listingToSave.ImageUrl = mainImageUrl;
+                listingToSave.DetailsImagesUrls = SelectedImagePaths.ToList();
 
-                ClearForm();
-
-                await navigationService.GoToCatalogAsync();
+                await listingRepository.UpdateListingAsync(listingToSave);
+               
+                await navigationService.GoToMyListingsAsync(currentUser.Id);
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Failed to add listing: {ex.Message}";
+                ErrorMessage = $"Failed to save listing: {ex.Message}";
             }
             finally
             {

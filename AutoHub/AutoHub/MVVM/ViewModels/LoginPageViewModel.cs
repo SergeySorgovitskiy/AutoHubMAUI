@@ -6,17 +6,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AutoHub.MVVM.ViewModels
 {
-    public partial class LoginPageViewModel : ObservableValidator
+    public partial class LoginPageViewModel(
+        INavigationService navigationService,
+        ILoginService loginService) : ObservableValidator
     {
-        private readonly INavigationService _navigationService;
-        private readonly ILoginService _loginService;
-
-        public LoginPageViewModel(INavigationService navigationService, ILoginService loginService)
-        {
-            _navigationService = navigationService;
-            _loginService = loginService;
-        }
-
         [ObservableProperty]
         [Required(ErrorMessage = "Email is required!")]
         [EmailAddress(ErrorMessage = "Incorrect Email format!")]
@@ -27,9 +20,9 @@ namespace AutoHub.MVVM.ViewModels
         private string _password = string.Empty;
 
         [ObservableProperty]
-        private string _errorMessage;
+        public partial string? ErrorMessage { get; set; }
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
-        partial void OnErrorMessageChanged(string value)
+        partial void OnErrorMessageChanged(string? value)
         {
             OnPropertyChanged(nameof(HasErrorMessage));
         }
@@ -44,18 +37,26 @@ namespace AutoHub.MVVM.ViewModels
             if (HasErrors)
             {
                 var firstError = GetErrors().FirstOrDefault()?.ErrorMessage;
-                ErrorMessage = firstError;
+                ErrorMessage = firstError ?? string.Empty;
                 return;
             }
 
-            var user = await _loginService.LoginAsync(Email, Password);
-            if (user != null)
+            try
             {
-                await _navigationService.GoToCatalogAsync();
+                var user = await loginService.LoginAsync(Email, Password);
+
+                if (user != null)
+                {
+                    await navigationService.GoToCatalogAsync();
+                }
+                else
+                {
+                    ErrorMessage = "Invalid login or password";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ErrorMessage = "Invalid login or password";
+                ErrorMessage = $"Login failed: {ex.Message}";
             }
 
         }
@@ -63,13 +64,13 @@ namespace AutoHub.MVVM.ViewModels
         [RelayCommand]
         private async Task GoToRegisterAsync()
         {
-            await _navigationService.GoToRegisterAsync();
+            await navigationService.GoToRegisterAsync();
         }
 
         [RelayCommand]
         private async Task ForgotPasswordAsync()
         {
-            await _navigationService.GoToForgotPasswordAsync(); 
+            await navigationService.GoToForgotPasswordAsync(); 
         }
 
     }

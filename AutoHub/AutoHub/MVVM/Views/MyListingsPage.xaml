@@ -1,0 +1,197 @@
+<ContentPage
+    x:Class="AutoHub.MVVM.Views.MyListingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:AutoHub.MVVM.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
+    x:DataType="viewModels:MyListingsPageViewModel"
+    BackgroundColor="#F0F2F5"
+    HideSoftInputOnTapped="True">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Grid
+            Grid.Row="0"
+            Margin="10,5"
+            ColumnDefinitions="*, Auto"
+            ColumnSpacing="10">
+            <Border
+                Grid.Column="0"
+                BackgroundColor="White"
+                HeightRequest="50"
+                Stroke="LightGray"
+                StrokeShape="RoundRectangle 25"
+                StrokeThickness="1">
+                <Grid
+                    Margin="10,0"
+                    ColumnDefinitions="Auto, *"
+                    ColumnSpacing="10">
+                    <Image
+                        Grid.Column="0"
+                        HeightRequest="20"
+                        Source="search.svg"
+                        VerticalOptions="Center"
+                        WidthRequest="20" />
+                    <Entry
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        Placeholder="Search your listings"
+                        Text="{Binding SearchQuery}"
+                        VerticalOptions="Center" />
+                </Grid>
+            </Border>
+            <Button
+                Grid.Column="1"
+                BackgroundColor="{StaticResource LightGreenBackground}"
+                ContentLayout="Left, 5"
+                CornerRadius="25"
+                HeightRequest="40"
+                ImageSource="options.svg"
+                Text="Filters"
+                TextColor="{StaticResource ButtonGreen}"
+                VerticalOptions="Center"
+                WidthRequest="100" />
+        </Grid>
+
+        <RefreshView
+            Grid.Row="1"
+            Command="{Binding LoadCarsCommand}"
+            IsRefreshing="{Binding IsLoading}"
+            RefreshColor="{StaticResource ButtonGreen}">
+            <CollectionView Margin="10,5" ItemsSource="{Binding CurrentUserListings}">
+
+                <CollectionView.EmptyView>
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label
+                            HorizontalOptions="Center"
+                            Text="No listings yet"
+                            TextColor="{StaticResource ValidateGrayLabel}" />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ListingModel">
+                        <Border
+                            Margin="0,0,0,15"
+                            Padding="15"
+                            BackgroundColor="White"
+                            Stroke="LightGray"
+                            StrokeShape="RoundRectangle 15"
+                            StrokeThickness="1">
+
+                            <Grid ColumnDefinitions="120, *, Auto" ColumnSpacing="15">
+
+                                <Grid Grid.Column="0">
+                                    <Border
+                                        HeightRequest="120"
+                                        StrokeShape="RoundRectangle 10"
+                                        StrokeThickness="0"
+                                        WidthRequest="120">
+                                        <Image
+                                            Aspect="AspectFill"
+                                            Source="{Binding ImageUrl}" />
+                                    </Border>
+                                    <Image
+                                        Margin="8"
+                                        HeightRequest="24"
+                                        HorizontalOptions="End"
+                                        Source="heart_empty.svg"
+                                        TintColor="{StaticResource Gray600}"
+                                        VerticalOptions="Start"
+                                        WidthRequest="24"
+                                        ZIndex="10">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MyListingsPageViewModel}}, Path=ToggleFavoriteCommand}" CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                        <Image.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding IsFavorite}"
+                                                TargetType="Image"
+                                                Value="True">
+                                                <Setter Property="Source" Value="heart_filled.svg" />
+                                                <Setter Property="TintColor" Value="Red" />
+                                            </DataTrigger>
+                                        </Image.Triggers>
+                                    </Image>
+                                </Grid>
+
+                                <VerticalStackLayout
+                                    Grid.Column="1"
+                                    Spacing="8"
+                                    VerticalOptions="Center">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="18"
+                                        Text="{Binding Price, StringFormat='${0:N0}'}"
+                                        TextColor="{StaticResource ButtonGreen}" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="16"
+                                        LineBreakMode="TailTruncation"
+                                        Text="{Binding Title}"
+                                        TextColor="Black" />
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label
+                                            FontSize="13"
+                                            Text="{Binding Location}"
+                                            TextColor="{StaticResource DetailsGray}" />
+                                        <Label
+                                            FontSize="13"
+                                            Text="•"
+                                            TextColor="{StaticResource DetailsGray}" />
+                                        <Label
+                                            FontSize="13"
+                                            Text="{Binding Mileage, StringFormat='{0:N0} mi'}"
+                                            TextColor="{StaticResource DetailsGray}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout
+                                    Grid.Column="2"
+                                    Spacing="12"
+                                    VerticalOptions="Center">
+                                    <Border
+                                        Padding="10"
+                                        BackgroundColor="{StaticResource LightGreenBackground}"
+                                        StrokeShape="RoundRectangle 10"
+                                        StrokeThickness="0">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MyListingsPageViewModel}}, Path=GoToEditCommand}" CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <Image
+                                            HeightRequest="22"
+                                            Source="edit_icon.svg"
+                                            TintColor="{StaticResource ButtonGreen}"
+                                            WidthRequest="22" />
+                                    </Border>
+
+                                    <Border
+                                        Padding="10"
+                                        BackgroundColor="#FFE0E0"
+                                        StrokeShape="RoundRectangle 10"
+                                        StrokeThickness="0">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MyListingsPageViewModel}}, Path=DeleteListingCommand}" CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <Image
+                                            HeightRequest="22"
+                                            Source="delete_icon.svg"
+                                            TintColor="Red"
+                                            WidthRequest="22" />
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

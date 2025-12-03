@@ -7,16 +7,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AutoHub.MVVM.ViewModels
 {
-    public partial class RegisterPageViewModel : ObservableValidator
+    public partial class RegisterPageViewModel(
+        INavigationService navigationService, 
+        IRegisterService registerService) : ObservableValidator
     {
-        private readonly INavigationService _navigationService;
-        private readonly IRegisterService _registerService;
-        public RegisterPageViewModel(INavigationService navigationService, IRegisterService registerService)
-        {
-            _navigationService = navigationService;
-            _registerService = registerService;
-        }
-
         [ObservableProperty]
         [Required(ErrorMessage = "Username is required!")]
         [MinLength(3, ErrorMessage = "The username must be at least 3 characters long")]
@@ -69,7 +63,7 @@ namespace AutoHub.MVVM.ViewModels
         }
       
         [ObservableProperty]
-        private string _errorMessage;
+        public partial string ErrorMessage { get; set; } = string.Empty;
 
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
 
@@ -88,7 +82,7 @@ namespace AutoHub.MVVM.ViewModels
             if (HasErrors)
             {
                 var firstError = GetErrors().FirstOrDefault()?.ErrorMessage;
-                ErrorMessage = firstError;
+                ErrorMessage = firstError ?? string.Empty;
                 return;
             }
 
@@ -102,30 +96,27 @@ namespace AutoHub.MVVM.ViewModels
                     PhoneNumber = PhoneNumber
                 };
 
-                bool isSuccess = await _registerService.RegisterAsync(newUser);
+                bool isSuccess = await registerService.RegisterAsync(newUser);
 
                 if (isSuccess)
                 {
-                    await _navigationService.GoToLoginAsync();
+                    await navigationService.GoToLoginAsync();
                 }
                 else
                 {
-                    ErrorMessage = "A user with this email already eists.";
+                    ErrorMessage = "A user with this email already exists.";
                 }
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
             }
-
-
-                    
         }
 
         [RelayCommand]
         private async Task BackToLoginAsync()
         {
-            await _navigationService.GoBackAsync();
+            await navigationService.GoBackAsync();
         }
     }
 }

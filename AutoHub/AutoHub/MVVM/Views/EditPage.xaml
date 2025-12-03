@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="AutoHub.MVVM.Views.AddListingPage"
+    x:Class="AutoHub.MVVM.Views.EditPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:models="clr-namespace:AutoHub.MVVM.Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
-    Title="Add Listing"
-    x:DataType="viewModels:AddListingPageViewModel"
+    Title="Edit Listing"
+    x:DataType="viewModels:EditPageViewModel"
     HideSoftInputOnTapped="True">
 
     <ContentPage.Resources>
@@ -286,9 +286,9 @@
                     StrokeThickness="1">
                     <Button
                         BackgroundColor="{StaticResource ButtonGreen}"
-                        Command="{Binding AddListingCommand}"
+                        Command="{Binding SaveListingCommand}"
                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
-                        Text="Add Listing" />
+                        Text="Save Listing" />
                 </Border>
 
                 <ActivityIndicator

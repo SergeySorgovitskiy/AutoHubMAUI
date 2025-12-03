@@ -16,12 +16,9 @@ public partial class CatalogPage : ContentPage
     {
         base.OnAppearing();
 
-        if (_vm.Cars.Count == 0)
+        if (_vm.LoadCarsCommand.CanExecute(null))
         {
-            if (_vm.LoadCarsCommand.CanExecute(null))
-            {
-                _vm.LoadCarsCommand.Execute(null);
-            }
+            _vm.LoadCarsCommand.Execute(null);
         }
     }
 }

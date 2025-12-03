@@ -6,7 +6,7 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
     x:DataType="viewModels:DetailsPageViewModel"
-    BackgroundColor="#F0F2F5"
+    BackgroundColor="White"
     HideSoftInputOnTapped="True">
 
     <ContentPage.Resources>
@@ -131,6 +131,54 @@
                         </HorizontalStackLayout>
 
                     </HorizontalStackLayout>
+
+                    <Border
+                        Padding="5"
+                        BackgroundColor="White"
+                        StrokeShape="15"
+                        StrokeThickness="1">
+                        <Label Text="{Binding Car.Description}" />
+                    </Border>
+
+
+                    <Label
+                        Margin="10,0,0,0"
+                        Text="Seller"
+                        TextColor="{StaticResource DetailsGray}" />
+                    <Border
+                        Padding="5"
+                        BackgroundColor="White"
+                        StrokeShape="30"
+                        StrokeThickness="1">
+                        <HorizontalStackLayout>
+                            <Border
+                                HeightRequest="50"
+                                HorizontalOptions="Center"
+                                StrokeShape="300"
+                                WidthRequest="50">
+                                <Image Source="{Binding Seller.ProfileImageUrl}" />
+                            </Border>
+                            <Label
+                                Margin="20,10,10,0"
+                                FontSize="20"
+                                Text="{Binding Seller.Name}"
+                                TextColor="{StaticResource DetailsGray}" />
+                            <Label
+                                Margin="0,16,10,0"
+                                FontSize="15"
+                                Text="Phone:"
+                                TextColor="{StaticResource DetailsGray}" />
+                            <Label
+                                Margin="0,16,10,0"
+                                FontSize="15"
+                                Text="{Binding Seller.PhoneNumber}"
+                                TextColor="{StaticResource DetailsGray}" />
+
+                        </HorizontalStackLayout>
+                    </Border>
+
+
+
 
                 </VerticalStackLayout>
             </ScrollView>

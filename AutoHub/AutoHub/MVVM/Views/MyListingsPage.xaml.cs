@@ -2,19 +2,18 @@ using AutoHub.MVVM.ViewModels;
 
 namespace AutoHub.MVVM.Views;
 
-public partial class ProfilePage : ContentPage
+public partial class MyListingsPage : ContentPage
 {
-	public ProfilePage(ProfilePageViewModel vm)
+	public MyListingsPage(MyListingsPageViewModel vm)
 	{
 		InitializeComponent();
 		BindingContext = vm;
-	}
+    }
 
 	protected override void OnAppearing()
 	{
 		base.OnAppearing();
-		
-		if (BindingContext is ProfilePageViewModel viewModel)
+		if (BindingContext is MyListingsPageViewModel viewModel)
 		{
 			viewModel.OnAppearing();
 		}

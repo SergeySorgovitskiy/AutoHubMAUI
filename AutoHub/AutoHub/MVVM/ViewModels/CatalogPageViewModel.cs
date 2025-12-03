@@ -5,41 +5,38 @@ using AutoHub.Services.Repositories.ListingRepository;
 using AutoHub.Services.Repositories.UserRepository;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
 
 namespace AutoHub.MVVM.ViewModels
 {
-    public partial class CatalogPageViewModel : ObservableObject
+    public partial class CatalogPageViewModel(
+        ILoginService loginService,
+        IUserRepository userRepository,
+        IListingRepository listingRepository,
+        INavigationService navigationService) : ObservableObject
     {
-        private readonly IListingRepository _listingRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly INavigationService _navigationService;
-        private readonly ILoginService _loginService;
-        private readonly ILogger<CatalogPageViewModel> _logger;
+        
+        [ObservableProperty]
+        private ObservableCollection<ListingModel> _cars = new();
+
+        private List<ListingModel> _allCars = [];
 
         [ObservableProperty]
-        private List<ListingModel> _cars = [];
+        public partial bool IsLoading { get; set; }
 
         [ObservableProperty]
-        private bool _isLoading;
+        public partial string SearchQuery { get; set; } = string.Empty;
 
-        [ObservableProperty]
-        private string? _searchQuery;
-
-        public CatalogPageViewModel(ILoginService loginService,IUserRepository userRepository, IListingRepository listingRepository, INavigationService navigationService, ILogger<CatalogPageViewModel> logger)
+        partial void OnSearchQueryChanged(string value)
         {
-            _loginService = loginService;
-            _listingRepository = listingRepository;
-            _navigationService = navigationService;
-            _userRepository = userRepository;
-            _logger = logger;
+            FilterCars();
         }
 
         [RelayCommand]
         private async Task GoToDetailsAsync(ListingModel car)
         {
             if (car == null) return;
-            await _navigationService.GoToDetailsAsync(car.Id);
+            await navigationService.GoToDetailsAsync(car.Id);
         }
 
         [RelayCommand]
@@ -48,26 +45,63 @@ namespace AutoHub.MVVM.ViewModels
             IsLoading = true;
             try
             {
-                var list = await _listingRepository.GetListingsAsync();
-                var currentUser = _loginService.CurrentUser;
+                var list = await listingRepository.GetListingsAsync();
+                var currentUser = loginService.CurrentUser;
 
-                foreach (var car in list)
+                if (currentUser != null)
                 {
-                    if (currentUser != null && currentUser.FavoriteCarIds.Contains(car.Id))
+                    var favoriteIds = await userRepository.GetFavoriteIdsAsync(currentUser.Id);
+
+                    foreach (var car in list)
                     {
-                        car.IsFavorite = true;
+                        car.IsFavorite = favoriteIds.Contains(car.Id);
                     }
-                    else
+                }
+                else
+                {
+                    foreach (var car in list)
                     {
                         car.IsFavorite = false;
                     }
                 }
 
-                Cars = new List<ListingModel>(list);
+                _allCars = new List<ListingModel>(list);
+                FilterCars();
             }
             finally
             {
                 IsLoading = false;
+            }
+        }
+
+        private void FilterCars()
+        {
+            if (string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                Cars.Clear();
+                foreach (var car in _allCars)
+                {
+                    Cars.Add(car);
+                }
+                return;
+            }
+
+            var query = SearchQuery.ToLowerInvariant();
+            var filtered = _allCars.Where(car =>
+                (car.Title?.ToLowerInvariant().Contains(query) ?? false) ||
+                (car.Subtitle?.ToLowerInvariant().Contains(query) ?? false) ||
+                (car.Description?.ToLowerInvariant().Contains(query) ?? false) ||
+                (car.Location?.ToLowerInvariant().Contains(query) ?? false) ||
+                car.Year.ToString().Contains(query) ||
+                car.Price.ToString().Contains(query) ||
+                car.Mileage.ToString().Contains(query) ||
+                (car.IsElectric ? "electric" : "gas").Contains(query)
+            ).ToList();
+
+            Cars.Clear();
+            foreach (var car in filtered)
+            {
+                Cars.Add(car);
             }
         }
 
@@ -76,10 +110,13 @@ namespace AutoHub.MVVM.ViewModels
         {
             if (car == null) return;
 
+            var currentUser = loginService.CurrentUser;
+            if (currentUser == null) return;
+
             car.IsFavorite = !car.IsFavorite;
 
-            var userId = _loginService.CurrentUser.Id;
-            await _userRepository.ToggleFavoriteAsync(userId, car.Id);
+            var userId = currentUser.Id;
+            await userRepository.ToggleFavoriteAsync(userId, car.Id);
         }
     }
 }

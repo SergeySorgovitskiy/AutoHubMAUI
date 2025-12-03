@@ -1,42 +1,60 @@
 ﻿using AutoHub.MVVM.Models;
-using AutoHub.Services.AppMemoryStore;
+using AutoHub.Services.DbService;
+using SQLite;
 
 namespace AutoHub.Services.Repositories.ListingRepository
 {
-    public class ListingRepository : IListingRepository
+    public class ListingRepository(IDbService dbService) : IListingRepository
     {
-        private readonly Store _store;
-        public ListingRepository(Store store)
-        {
-            _store = store;
-        }
+        private SQLiteAsyncConnection Connection => dbService.GetConnection();
         public async Task<List<ListingModel>> GetListingsAsync()
         {
-            await Task.Delay(500);
-
-            return _store.Listings;
+            return await Connection.Table<ListingModel>()
+                .OrderByDescending(l=> l.CreatedDate)
+                .ToListAsync();
         }
-        public async Task<ListingModel> GetDetailsByIdAsync(int carId)
+        public async Task<ListingModel?> GetDetailsByIdAsync(int carId)
         {
-            await Task.Delay(500); 
-            
-            return _store.Listings.FirstOrDefault(c => c.Id == carId);
+            return await Connection.Table<ListingModel>()
+                .Where(c=> c.Id == carId)
+                .FirstOrDefaultAsync();
         }
-        public Task<List<ListingModel>> GetFavoritesByUserIdAsync(int userId)
+        public async Task<List<ListingModel>> GetFavoritesByUserIdAsync(int userId)
         {
+            var favorites = await Connection.Table<FavoriteModel>()
+                .Where(f => f.UserId == userId)
+                .ToListAsync();
             
-            var user = _store.Users.FirstOrDefault(u => u.Id == userId);
+            var favoriteIds = favorites.Select(f => f.ListingId).ToList();
 
-            if (user == null || user.FavoriteCarIds == null || user.FavoriteCarIds.Count == 0)
-            {
-                return Task.FromResult(new List<ListingModel>());
-            }
+            if (favoriteIds.Count == 0)
+                return new List<ListingModel>();
 
-            var favoriteListings = _store.Listings
-                .Where(car => user.FavoriteCarIds.Contains(car.Id))
-                .ToList();
-
-            return Task.FromResult(favoriteListings);
+            return await Connection.Table<ListingModel>()
+               .Where(l => favoriteIds.Contains(l.Id))
+               .ToListAsync();
         }
+
+        public async Task AddListingAsync(ListingModel newListing)
+        {
+            await Connection.InsertAsync(newListing);
+        }
+        public async Task UpdateListingAsync(ListingModel listing)
+        {
+            listing.UpdatedDate = DateTime.Now;
+            await Connection.UpdateAsync(listing);
+        }
+        public async Task DeleteListingAsync(int listingId)
+        {
+            await Connection.DeleteAsync<ListingModel>(listingId);  
+        }
+        public async Task<List<ListingModel>> GetListingsByUserIdAsync(int userId)
+        {
+            return await Connection.Table<ListingModel>()
+                .Where(l => l.SellerUserId == userId)
+                .OrderByDescending(l => l.CreatedDate)
+                .ToListAsync();
+        }
+
     }
 } 
