@@ -28,7 +28,7 @@
                         <Image
                             Margin="10,0"
                             HeightRequest="30"
-                            Source="logo.svg"
+                            Source="logo"
                             WidthRequest="30" />
                         <Label
                             FontAttributes="Bold"
@@ -182,7 +182,7 @@
                                     VerticalOptions="Center">
                                     <Image
                                         HeightRequest="30"
-                                        Source="camera_icon.svg"
+                                        Source="camera_icon"
                                         WidthRequest="30" />
                                     <Label
                                         FontSize="12"
@@ -208,7 +208,7 @@
                                     VerticalOptions="Center">
                                     <Image
                                         HeightRequest="30"
-                                        Source="gallery_icon.svg"
+                                        Source="gallery_icon"
                                         WidthRequest="30" />
                                     <Label
                                         FontSize="12"

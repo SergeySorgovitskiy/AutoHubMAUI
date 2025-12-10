@@ -7,24 +7,26 @@
     Title="LoginPage"
     x:DataType="viewModels:LoginPageViewModel"
     HideSoftInputOnTapped="True">
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <VerticalStackLayout Padding="20"
+                         Spacing="15">
         <HorizontalStackLayout Grid.Column="0">
             <Image
                 Margin="10,0"
                 HeightRequest="30"
-                Source="logo.svg"
-                WidthRequest="30" />
+                Source="logo"
+                WidthRequest="30"/>
             <Label
                 FontAttributes="Bold"
                 FontSize="20"
                 HorizontalTextAlignment="Start"
-                Text="AutoHub" />
+                Text="AutoHub"/>
         </HorizontalStackLayout>
-        <Label FontSize="28" Text="Welcome!" />
+        <Label FontSize="28"
+               Text="Welcome!"/>
         <Label
             FontSize="18"
             Text="Find your perfect car or list yours in minutes."
-            TextColor="Gray" />
+            TextColor="Gray"/>
         <Border
             Padding="20"
             BackgroundColor="#CCEFEB"
@@ -44,27 +46,29 @@
                     <Image
                         HeightRequest="35"
                         Source="logo.png"
-                        WidthRequest="40" />
+                        WidthRequest="40"/>
                 </Border>
                 <VerticalStackLayout Grid.Column="1">
                     <Label
                         FontSize="Medium"
                         LineBreakMode="WordWrap"
                         Text="Thousands of verified listings"
-                        TextColor="{StaticResource ButtonGreen}" />
+                        TextColor="{StaticResource ButtonGreen}"/>
                     <Label
                         LineBreakMode="WordWrap"
                         Text="Smart filters, favorites and viewing history"
-                        TextColor="#949494" />
+                        TextColor="#949494"/>
                 </VerticalStackLayout>
             </Grid>
         </Border>
-        <Label FontSize="30" Text="Sign in" />
+        <Label FontSize="30"
+               Text="Sign in"/>
         <Border
             BackgroundColor="#F8F8F7"
             StrokeShape="10"
             StrokeThickness="1">
-            <Entry Placeholder="Email" Text="{Binding Email}" />
+            <Entry Placeholder="Email"
+                   Text="{Binding Email}"/>
         </Border>
         <Border
             BackgroundColor="#F8F8F7"
@@ -73,30 +77,45 @@
             <Entry
                 IsPassword="True"
                 Placeholder="Password"
-                Text="{Binding Password}" />
+                Text="{Binding Password}"/>
         </Border>
-        <Border StrokeShape="10" StrokeThickness="1">
+
+
+        <Border StrokeShape="10"
+                StrokeThickness="1">
             <Button
                 x:Name="SignInButton"
                 BackgroundColor="{StaticResource ButtonGreen}"
                 Command="{Binding LoginCommand}"
-                Text="Log in" />
+                Text="Log in"/>
         </Border>
+
+        <Button
+            Margin="0,-10,0,0"
+            BackgroundColor="{StaticResource ButtonGreen}"
+            BorderWidth="1"
+            Command="{Binding BiometricLoginCommand}"
+            IsVisible="{Binding IsBiometricLoginVisible}"
+            Text="Log in with Face ID"/>
+
         <Label
             Padding="0,5"
             HorizontalOptions="Center"
             IsVisible="{Binding HasErrorMessage}"
             Text="{Binding ErrorMessage}"
-            TextColor="Red" />
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-            <Label Text="Register" TextColor="{StaticResource ButtonGreen}">
+            TextColor="Red"/>
+        <HorizontalStackLayout HorizontalOptions="Center"
+                               Spacing="10">
+            <Label Text="Register"
+                   TextColor="{StaticResource ButtonGreen}">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
+                    <TapGestureRecognizer Command="{Binding GoToRegisterCommand}"/>
                 </Label.GestureRecognizers>
             </Label>
-            <Label Text="Forgot password?" TextColor="{StaticResource ButtonGreen}">
+            <Label Text="Forgot password?"
+                   TextColor="{StaticResource ButtonGreen}">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
+                    <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}"/>
                 </Label.GestureRecognizers>
             </Label>
         </HorizontalStackLayout>

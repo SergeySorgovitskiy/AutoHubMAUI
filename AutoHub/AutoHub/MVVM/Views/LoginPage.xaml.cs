@@ -9,4 +9,14 @@ public partial class LoginPage : ContentPage
 		InitializeComponent();
 		BindingContext = vm;
 	}
+	
+	protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+		if(BindingContext is LoginPageViewModel vm)
+        {
+            await vm.CheckSavedCredentialsAsync();
+        }
+    }
 }

@@ -28,5 +28,13 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The app requires access to the camera to take photos of cars.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app requires access to the gallery to select car photos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>The app requires access to save photos to the gallery.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Need your face to log in!</string>
 </dict>
 </plist>

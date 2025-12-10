@@ -15,7 +15,7 @@
 		<ApplicationTitle>AutoHub</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.autohub</ApplicationId>
+		<ApplicationId>com.sergey.testfaceid</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -42,7 +42,9 @@
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#CCEFEB" BaseSize="128,128" />
 
 		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Include="Resources\Images\*.svg" BaseSize="24,24" Resize="True" />
+		<MauiImage Include="Resources\Images\*.jpg" />
+		<MauiImage Include="Resources\Images\*.png" />
 		
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -56,6 +58,8 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+		<PackageReference Include="Plugin.Fingerprint" Version="2.1.5" />
+		<PackageReference Include="Plugin.Maui.Biometric" Version="0.1.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
 

@@ -25,7 +25,7 @@
                     <Image
                         Margin="10,0"
                         HeightRequest="30"
-                        Source="logo.svg"
+                        Source="logo"
                         WidthRequest="30" />
                     <Label
                         FontAttributes="Bold"

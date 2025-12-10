@@ -3,7 +3,8 @@ using AutoHub.Services.Repositories.UserRepository;
 
 namespace AutoHub.Services.LoginService
 {
-    public class LoginService(IUserRepository userRepository) : ILoginService
+    public class LoginService(
+            IUserRepository userRepository) : ILoginService
     {
         public UserModel? CurrentUser { get; private set; }
         public async Task<UserModel?> LoginAsync(string email, string password)

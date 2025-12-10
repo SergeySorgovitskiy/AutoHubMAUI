@@ -59,7 +59,7 @@
                                 VerticalOptions="Center">
                                 <Image
                                     HeightRequest="30"
-                                    Source="camera_icon.svg"
+                                    Source="camera_icon"
                                     WidthRequest="30" />
                                 <Label
                                     FontSize="12"
@@ -84,7 +84,7 @@
                                 VerticalOptions="Center">
                                 <Image
                                     HeightRequest="30"
-                                    Source="gallery_icon.svg"
+                                    Source="gallery_icon"
                                     WidthRequest="30" />
                                 <Label
                                     FontSize="12"

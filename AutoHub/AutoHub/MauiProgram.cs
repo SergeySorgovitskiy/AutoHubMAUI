@@ -9,6 +9,7 @@ using AutoHub.Services.Repositories.ListingRepository;
 using AutoHub.Services.Repositories.UserRepository;
 using AutoHub.Services.DbService;
 using AutoHub.Services.PhotoService;
+using Plugin.Maui.Biometric;
 
 #if IOS
 using UIKit;
@@ -54,6 +55,7 @@ namespace AutoHub
             builder.Services.AddSingleton<IRegisterService, RegisterService>();
             builder.Services.AddSingleton<IDbService, DbService>();
             builder.Services.AddSingleton<IPhotoService, PhotoService>();
+            builder.Services.AddSingleton<IBiometric>(BiometricAuthenticationService.Default);
 
 #if DEBUG
             builder.Logging.AddDebug();

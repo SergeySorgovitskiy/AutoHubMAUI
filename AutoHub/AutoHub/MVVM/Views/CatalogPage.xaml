@@ -36,7 +36,7 @@
                     <Image
                         Grid.Column="0"
                         HeightRequest="20"
-                        Source="search.svg"
+                        Source="search"
                         VerticalOptions="Center"
                         WidthRequest="20" />
                     <Entry
@@ -53,7 +53,7 @@
                 ContentLayout="Left, 5"
                 CornerRadius="25"
                 HeightRequest="40"
-                ImageSource="options.svg"
+                ImageSource="options"
                 Text="Filters"
                 TextColor="{StaticResource ButtonGreen}"
                 VerticalOptions="Center"
@@ -118,13 +118,13 @@
                                             Binding="{Binding IsFavorite}"
                                             TargetType="Image"
                                             Value="True">
-                                            <Setter Property="Source" Value="heart_filled.svg" />
+                                            <Setter Property="Source" Value="heart_filled" />
                                         </DataTrigger>
                                         <DataTrigger
                                             Binding="{Binding IsFavorite}"
                                             TargetType="Image"
                                             Value="False">
-                                            <Setter Property="Source" Value="heart_empty.svg" />
+                                            <Setter Property="Source" Value="heart_empty" />
                                         </DataTrigger>
                                     </Image.Triggers>
                                 </Image>
@@ -166,7 +166,7 @@
                                                 <Image
                                                     Aspect="AspectFit"
                                                     HeightRequest="12"
-                                                    Source="electro.svg"
+                                                    Source="electro"
                                                     VerticalOptions="Center"
                                                     WidthRequest="12" />
                                                 <Label
@@ -182,7 +182,7 @@
                                             <Image
                                                 Aspect="AspectFit"
                                                 HeightRequest="12"
-                                                Source="mileage.svg"
+                                                Source="mileage"
                                                 VerticalOptions="Center"
                                                 WidthRequest="12" />
                                             <Label

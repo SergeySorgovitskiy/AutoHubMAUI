@@ -2,14 +2,20 @@
 using AutoHub.Services.NavigationService;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CoreImage;
+using Plugin.Maui.Biometric;
 using System.ComponentModel.DataAnnotations;
 
 namespace AutoHub.MVVM.ViewModels
 {
     public partial class LoginPageViewModel(
         INavigationService navigationService,
-        ILoginService loginService) : ObservableValidator
+        ILoginService loginService,
+        IBiometric biometric) : ObservableValidator
     {
+        [ObservableProperty]
+        private bool isBiometricLoginVisible;
+
         [ObservableProperty]
         [Required(ErrorMessage = "Email is required!")]
         [EmailAddress(ErrorMessage = "Incorrect Email format!")]
@@ -25,6 +31,12 @@ namespace AutoHub.MVVM.ViewModels
         partial void OnErrorMessageChanged(string? value)
         {
             OnPropertyChanged(nameof(HasErrorMessage));
+        }
+
+        public async Task CheckSavedCredentialsAsync()
+        {
+            var savedEmail = await SecureStorage.GetAsync("user_email");
+            IsBiometricLoginVisible = !string.IsNullOrEmpty(savedEmail);    
         }
 
         [RelayCommand]
@@ -47,6 +59,10 @@ namespace AutoHub.MVVM.ViewModels
 
                 if (user != null)
                 {
+                    if(!isBiometricLoginVisible)
+                    {
+                        await SaveCredentialsAsync(Email, Password);
+                    }
                     await navigationService.GoToCatalogAsync();
                 }
                 else
@@ -59,6 +75,45 @@ namespace AutoHub.MVVM.ViewModels
                 ErrorMessage = $"Login failed: {ex.Message}";
             }
 
+        }
+
+        private async Task SaveCredentialsAsync(string email, string password)
+        {
+            bool answer = await Shell.Current.DisplayAlert("Face ID", "Use Face ID to quick login in the future?", "Yes","No");
+
+            if(answer)
+            {
+                await SecureStorage.SetAsync("user_email", email);
+                await SecureStorage.SetAsync("user_password", password);
+                IsBiometricLoginVisible = true; 
+            }
+        }
+
+        [RelayCommand]
+        private async Task BiometricLoginAsync()
+        {
+            var request = new AuthenticationRequest
+            {
+                Title = "Login in AutoHub",
+                Subtitle = "Сonfirm your identity",
+                Description = "For automatic login",
+                NegativeText = "Cancel",
+            };
+
+            var result = await biometric.AuthenticateAsync(request, CancellationToken.None);
+
+            if(result.Status == BiometricResponseStatus.Success)
+            {
+                var savedEmail = await SecureStorage.GetAsync("user_email");
+                var savedPassword = await SecureStorage.GetAsync("user_password");
+
+                if(!string.IsNullOrEmpty(savedEmail)&& !string.IsNullOrEmpty(savedPassword))
+                {
+                        Email = savedEmail;
+                        Password = savedPassword;
+                        await LoginAsync();
+                }
+            }
         }
 
         [RelayCommand]

@@ -1,4 +1,7 @@
-﻿namespace AutoHub.Services.PhotoService
+﻿using Microsoft.Maui.Storage;
+using Microsoft.Maui.Media;
+
+namespace AutoHub.Services.PhotoService
 {
     public class PhotoService : IPhotoService
     {
@@ -26,7 +29,23 @@
                     return Enumerable.Empty<FileResult>();
                 }
 
+#if IOS
+                var copiedFiles = new List<FileResult>();
+                foreach (var photo in photos.Take(maxCount))
+                {
+                    if (photo != null)
+                    {
+                        var copiedFile = await CopyToLocalStorageAsync(photo);
+                        if (copiedFile != null)
+                        {
+                            copiedFiles.Add(copiedFile);
+                        }
+                    }
+                }
+                return copiedFiles;
+#else
                 return photos.Take(maxCount);
+#endif
             }
             catch (Exception ex)
             {
@@ -53,7 +72,16 @@
                     Title = "Please take a photo"
                 });
 
+                if (photo == null)
+                {
+                    return null;
+                }
+
+#if IOS
+                return await CopyToLocalStorageAsync(photo);
+#else
                 return photo;
+#endif
             }
             catch (PermissionException pex)
             {
@@ -64,5 +92,31 @@
                 throw new Exception($"Failed to take photo: {ex.Message}", ex);
             }
         }
+
+#if IOS
+        private async Task<FileResult?> CopyToLocalStorageAsync(FileResult file)
+        {
+            try
+            {
+                if (file == null) return null;
+
+                var localAppData = FileSystem.AppDataDirectory;
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                var targetPath = Path.Combine(localAppData, fileName);
+
+                using (var sourceStream = await file.OpenReadAsync())
+                using (var targetStream = File.Create(targetPath))
+                {
+                    await sourceStream.CopyToAsync(targetStream);
+                }
+
+                return new FileResult(targetPath, file.ContentType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to copy file: {ex.Message}", ex);
+            }
+        }
+#endif
     }
 }

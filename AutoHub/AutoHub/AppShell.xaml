@@ -20,22 +20,22 @@
         <ShellContent
             Title="Home"
             ContentTemplate="{DataTemplate views:CatalogPage}"
-            Icon="home_icon.svg"
+            Icon="home_icon"
             Route="CatalogPage" />
         <ShellContent
             Title="Favorites"
             ContentTemplate="{DataTemplate views:FavoritePage}"
-            Icon="favorite_icon.svg"
+            Icon="favorite_icon"
             Route="FavoritePage" />
         <ShellContent
             Title="Add"
             ContentTemplate="{DataTemplate views:AddListingPage}"
-            Icon="add_icon.svg"
+            Icon="add_icon"
             Route="AddListingPage" />
         <ShellContent
             Title="Profile"
             ContentTemplate="{DataTemplate views:ProfilePage}"
-            Icon="profile_icon.svg"
+            Icon="profile_icon"
             Route="ProfilePage" />
     </TabBar>
 
