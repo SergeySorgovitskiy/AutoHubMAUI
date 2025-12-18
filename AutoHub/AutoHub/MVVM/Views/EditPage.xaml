@@ -232,9 +232,11 @@
                                         <Border
                                             Padding="0"
                                             BackgroundColor="Transparent"
+                                            HeightRequest="100"
                                             Stroke="{StaticResource Gray300}"
                                             StrokeShape="RoundRectangle 8"
-                                            StrokeThickness="1">
+                                            StrokeThickness="1"
+                                            WidthRequest="100">
                                             <Image
                                                 Aspect="AspectFill"
                                                 HeightRequest="100"

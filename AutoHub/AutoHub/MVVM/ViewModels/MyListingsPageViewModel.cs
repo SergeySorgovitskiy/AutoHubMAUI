@@ -5,6 +5,7 @@ using AutoHub.Services.Repositories.ListingRepository;
 using AutoHub.Services.Repositories.UserRepository;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.ApplicationModel;
 using System.Collections.ObjectModel;
 
 namespace AutoHub.MVVM.ViewModels
@@ -30,7 +31,10 @@ namespace AutoHub.MVVM.ViewModels
 
         partial void OnSearchQueryChanged(string? value)
         {
-            LoadCarsCommand.Execute(null);
+            _ = MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                await LoadCarsAsync();
+            });
         }
 
         [RelayCommand]
@@ -173,9 +177,19 @@ namespace AutoHub.MVVM.ViewModels
             car.IsFavorite = false;
         }
 
-        public void OnAppearing()
+        public async void OnAppearing()
         {
-            LoadCarsCommand.Execute(null);
+            try
+            {
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await LoadCarsAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error loading listings: {ex.Message}";
+            }
         }
 
         

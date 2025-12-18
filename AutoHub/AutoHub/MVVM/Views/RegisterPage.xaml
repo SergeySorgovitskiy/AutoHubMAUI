@@ -40,7 +40,6 @@
                 Margin="0,0,0,10"
                 Padding="10"
                 BackgroundColor="#E8E8E8"
-                HeightRequest="80"
                 StrokeShape="10"
                 StrokeThickness="0">
                 <VerticalStackLayout>
@@ -48,7 +47,10 @@
                         FontAttributes="Bold"
                         FontSize="25"
                         Text="Create your account" />
-                    <Label FontSize="15" Text="Use your email and phone number to get started" />
+                    <Label 
+                        FontSize="15" 
+                        LineBreakMode="WordWrap"
+                        Text="Use your email and phone number to get started" />
                 </VerticalStackLayout>
             </Border>
             <Border
