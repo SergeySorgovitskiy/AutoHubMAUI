@@ -65,7 +65,9 @@
             Command="{Binding LoadCarsCommand}"
             IsRefreshing="{Binding IsLoading}"
             RefreshColor="{StaticResource ButtonGreen}">
-            <CollectionView Margin="10,5" ItemsSource="{Binding CurrentUserListings}">
+            <CollectionView 
+                Margin="10,5" 
+                ItemsSource="{Binding CurrentUserListings}">
 
                 <CollectionView.EmptyView>
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
@@ -113,7 +115,6 @@
                                                 TargetType="Image"
                                                 Value="True">
                                                 <Setter Property="Source" Value="heart_filled" />
-                                                <Setter Value="Red" />
                                             </DataTrigger>
                                         </Image.Triggers>
                                     </Image>

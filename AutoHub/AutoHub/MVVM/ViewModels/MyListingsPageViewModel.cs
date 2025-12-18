@@ -7,13 +7,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.ApplicationModel;
 using System.Collections.ObjectModel;
+using Microsoft.Maui.Devices;
 
 namespace AutoHub.MVVM.ViewModels
 {
     public partial class MyListingsPageViewModel(
-        INavigationService navigationService,                                            
-        ILoginService loginService,                                              
-        IListingRepository listingRepository,                                         
+        INavigationService navigationService,
+        ILoginService loginService,
+        IListingRepository listingRepository,
         IUserRepository userRepository) : ObservableObject
     {
 
@@ -44,16 +45,13 @@ namespace AutoHub.MVVM.ViewModels
 
             try
             {
-                var action = await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    return await Shell.Current.DisplayActionSheet(
-                        "Choose an action",
-                        "Cancel",
-                        null,
-                        "Edit",
-                        "Delete"
-                    );
-                });
+                string? action = await Shell.Current.DisplayActionSheet(
+                    "Choose an action",
+                    "Cancel",
+                    null,
+                    "Edit",
+                    "Delete"
+                );
 
                 if (action == "Edit")
                 {
@@ -61,15 +59,12 @@ namespace AutoHub.MVVM.ViewModels
                 }
                 else if (action == "Delete")
                 {
-                    var confirm = await MainThread.InvokeOnMainThreadAsync(async () =>
-                    {
-                        return await Shell.Current.DisplayAlert(
-                            "Delete Listing",
-                            "Are you sure you want to delete this listing?",
-                            "Delete",
-                            "Cancel"
-                        );
-                    });
+                    bool confirm = await Shell.Current.DisplayAlert(
+                        "Delete Listing",
+                        "Are you sure you want to delete this listing?",
+                        "Delete",
+                        "Cancel"
+                    );
 
                     if (confirm)
                     {
@@ -93,8 +88,21 @@ namespace AutoHub.MVVM.ViewModels
         [RelayCommand]
         private async Task LoadCarsAsync()
         {
+            if (IsLoading) return;
+
             var currentUser = loginService.CurrentUser;
-            if (currentUser == null) return;
+            if (currentUser == null)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    try
+                    {
+                        CurrentUserListings.Clear();
+                    }
+                    catch { }
+                });
+                return;
+            }
 
             int userId = currentUser.Id;
 
@@ -110,22 +118,65 @@ namespace AutoHub.MVVM.ViewModels
                     carList = new List<ListingModel>();
                 }
 
-                CurrentUserListings.Clear();
-                foreach (var listing in carList)
+
+                if (DeviceInfo.Platform == DevicePlatform.iOS)
                 {
-                    if (listing != null)
+                    await Task.Delay(300);
+
+                    MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        CurrentUserListings.Add(listing);
-                    }
+                        try
+                        {
+                            CurrentUserListings.Clear();
+
+                            foreach (var listing in carList)
+                            {
+                                if (listing != null)
+                                {
+                                    CurrentUserListings.Add(listing);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorMessage = $"Error updating UI: {ex.Message}";
+                        }
+                        finally
+                        {
+                            IsLoading = false;
+                        }
+                    });
+                }
+                else
+                {
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        try
+                        {
+                            CurrentUserListings.Clear();
+                            foreach (var listing in carList)
+                            {
+                                if (listing != null)
+                                {
+                                    CurrentUserListings.Add(listing);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorMessage = $"Error updating UI: {ex.Message}";
+                        }
+                    });
+                    IsLoading = false;
                 }
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Failed to load listings: {ex.Message}";
-            }
-            finally
-            {
-                IsLoading = false;
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    ErrorMessage = $"Failed to load listings: {ex.Message}";
+                    IsLoading = false;
+                });
             }
         }
 
@@ -147,11 +198,14 @@ namespace AutoHub.MVVM.ViewModels
                 ErrorMessage = string.Empty;
                 await listingRepository.DeleteListingAsync(listing.Id);
 
-                var itemToRemove = CurrentUserListings.FirstOrDefault(l => l.Id == listing.Id);
-                if (itemToRemove != null)
+                await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    CurrentUserListings.Remove(itemToRemove);
-                }
+                    var itemToRemove = CurrentUserListings.FirstOrDefault(l => l.Id == listing.Id);
+                    if (itemToRemove != null)
+                    {
+                        CurrentUserListings.Remove(itemToRemove);
+                    }
+                });
             }
             catch (Exception ex)
             {
@@ -177,22 +231,8 @@ namespace AutoHub.MVVM.ViewModels
             car.IsFavorite = false;
         }
 
-        public async void OnAppearing()
-        {
-            try
-            {
-                await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    await LoadCarsAsync();
-                });
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = $"Error loading listings: {ex.Message}";
-            }
-        }
 
-        
+
     }
 }
 

@@ -157,7 +157,7 @@
                     BackgroundColor="White"
                     StrokeShape="10"
                     StrokeThickness="0">
-                    <VerticalStackLayout Spacing="15">
+                    <VerticalStackLayout Spacing="10">
 
                         <Label
                             FontAttributes="Bold"
@@ -220,15 +220,18 @@
                         </Grid>
 
                         <CollectionView
-                            Margin="0,10,0,0"
+                            Margin="0,5,0,0"
                             ItemsSource="{Binding SelectedImages}"
-                            SelectionMode="None">
+                            SelectionMode="None"
+                            HeightRequest="100">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
                             </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="models:PhotoItem">
-                                    <Grid>
+                                    <Grid
+                                        HeightRequest="100"
+                                        WidthRequest="100">
                                         <Border
                                             Padding="0"
                                             BackgroundColor="Transparent"
@@ -245,11 +248,13 @@
                                         </Border>
                                         <Border
                                             BackgroundColor="Transparent"
+                                            HeightRequest="24"
                                             HorizontalOptions="End"
-                                            Margin="2"
+                                            Margin="-8,4,4,-8"
                                             Padding="0"
                                             StrokeThickness="0"
                                             VerticalOptions="Start"
+                                            WidthRequest="24"
                                             ZIndex="10">
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer 
@@ -257,9 +262,11 @@
                                                     CommandParameter="{Binding .}" />
                                             </Border.GestureRecognizers>
                                             <Label
-                                                FontSize="14"
+                                                FontSize="16"
+                                                HorizontalOptions="Center"
                                                 Text="✕"
-                                                TextColor="Black" />
+                                                TextColor="Black"
+                                                VerticalOptions="Center" />
                                         </Border>
                                     </Grid>
                                 </DataTemplate>
@@ -267,16 +274,17 @@
                         </CollectionView>
 
                         <Label
+                            Margin="0,5,0,0"
                             FontSize="12"
                             Text="First photo will be the cover image."
                             TextColor="{StaticResource Gray500}"
-                            VerticalOptions="Center" />
+                            VerticalOptions="Start" />
 
                     </VerticalStackLayout>
                 </Border>
 
                 <Border
-                    Margin="0,5"
+                    Margin="0,10"
                     BackgroundColor="#F8F8F7"
                     StrokeShape="10"
                     StrokeThickness="1">

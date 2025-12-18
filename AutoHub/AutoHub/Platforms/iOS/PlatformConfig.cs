@@ -34,6 +34,16 @@ namespace AutoHub.Platforms.iOS
                     }
                 }
             });
+
+            EntryHandler.Mapper.AppendToMapping("NoBorder", (handler, view) =>
+            {
+                if (handler.PlatformView is UITextField textField)
+                {
+                    textField.BorderStyle = UITextBorderStyle.None;
+                    textField.BackgroundColor = UIKit.UIColor.Clear;
+                    textField.Layer.BorderWidth = 0;
+                }
+            });
         }
     }
 }
