@@ -37,6 +37,10 @@ namespace AutoHub
                     Platforms.Android.PlatformConfig.ConfigurePlatform();
 #endif
 
+#if IOS
+                    Platforms.iOS.PlatformConfig.ConfigurePlatform();
+#endif
+
                 });
 
             builder.Services.AddTransientWithShellRoute<LoginPage, LoginPageViewModel>(nameof(LoginPage));

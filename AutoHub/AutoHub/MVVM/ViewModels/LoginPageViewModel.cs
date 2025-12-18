@@ -79,7 +79,7 @@ namespace AutoHub.MVVM.ViewModels
 
         private async Task SaveCredentialsAsync(string email, string password)
         {
-            bool answer = await Shell.Current.DisplayAlert("Face ID", "Use Face ID to quick login in the future?", "Yes","No");
+            bool answer = await Shell.Current.DisplayAlertAsync("Face ID", "Use Face ID to quick login in the future?", "Yes","No");
 
             if(answer)
             {

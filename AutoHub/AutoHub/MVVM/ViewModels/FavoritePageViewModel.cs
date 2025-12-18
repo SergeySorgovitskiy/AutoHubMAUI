@@ -17,9 +17,7 @@ namespace AutoHub.MVVM.ViewModels
         ILoginService loginService) : ObservableObject
     {
         [ObservableProperty]
-        private ObservableCollection<ListingModel> _favoriteCars = new();
-
-        private List<ListingModel> _allFavoriteCars = [];
+        private ObservableCollection<ListingModel> _favoriteCars = [];
 
         [ObservableProperty]
         public partial bool IsLoading { get; set; }
@@ -32,7 +30,7 @@ namespace AutoHub.MVVM.ViewModels
 
         partial void OnSearchQueryChanged(string? value)
         {
-            FilterCars();
+            LoadCarsCommand.Execute(null);
         }
 
         [RelayCommand]
@@ -47,22 +45,25 @@ namespace AutoHub.MVVM.ViewModels
         {
             var currentUser = loginService.CurrentUser;
             if (currentUser == null) return;
-            
+
             int userId = currentUser.Id;
 
             try
             {
                 IsLoading = true;
 
-                var carList = await listingService.GetFavoritesByUserIdAsync(userId);
+                var carList = await listingService.GetFavoritesByUserIdAsync(userId, SearchQuery);
 
                 foreach (var car in carList)
                 {
                     car.IsFavorite = true;
                 }
 
-                _allFavoriteCars = carList;
-                FilterCars();
+                FavoriteCars.Clear();
+                foreach (var car in carList)
+                {
+                    FavoriteCars.Add(car);
+                }
             }
             catch (Exception ex)
             {
@@ -90,38 +91,6 @@ namespace AutoHub.MVVM.ViewModels
             if (FavoriteCars.Contains(car))
             {
                 FavoriteCars.Remove(car);
-                _allFavoriteCars.Remove(car);
-            }
-        }
-
-        private void FilterCars()
-        {
-            if (string.IsNullOrWhiteSpace(SearchQuery))
-            {
-                FavoriteCars.Clear();
-                foreach (var car in _allFavoriteCars)
-                {
-                    FavoriteCars.Add(car);
-                }
-                return;
-            }
-
-            var query = SearchQuery.ToLowerInvariant();
-            var filtered = _allFavoriteCars.Where(car =>
-                (car.Title?.ToLowerInvariant().Contains(query) ?? false) ||
-                (car.Subtitle?.ToLowerInvariant().Contains(query) ?? false) ||
-                (car.Description?.ToLowerInvariant().Contains(query) ?? false) ||
-                (car.Location?.ToLowerInvariant().Contains(query) ?? false) ||
-                car.Year.ToString().Contains(query) ||
-                car.Price.ToString().Contains(query) ||
-                car.Mileage.ToString().Contains(query) ||
-                (car.IsElectric ? "electric" : "gas").Contains(query)
-            ).ToList();
-
-            FavoriteCars.Clear();
-            foreach (var car in filtered)
-            {
-                FavoriteCars.Add(car);
             }
         }
     }

@@ -17,9 +17,7 @@ namespace AutoHub.MVVM.ViewModels
     {
         
         [ObservableProperty]
-        private ObservableCollection<ListingModel> _cars = new();
-
-        private List<ListingModel> _allCars = [];
+        private ObservableCollection<ListingModel> _cars = [];
 
         [ObservableProperty]
         public partial bool IsLoading { get; set; }
@@ -29,7 +27,7 @@ namespace AutoHub.MVVM.ViewModels
 
         partial void OnSearchQueryChanged(string value)
         {
-            FilterCars();
+            LoadCarsCommand.Execute(null);
         }
 
         [RelayCommand]
@@ -45,7 +43,8 @@ namespace AutoHub.MVVM.ViewModels
             IsLoading = true;
             try
             {
-                var list = await listingRepository.GetListingsAsync();
+
+                var list = await listingRepository.GetListingsAsync(SearchQuery);
                 var currentUser = loginService.CurrentUser;
 
                 if (currentUser != null)
@@ -65,8 +64,11 @@ namespace AutoHub.MVVM.ViewModels
                     }
                 }
 
-                _allCars = new List<ListingModel>(list);
-                FilterCars();
+                Cars.Clear();
+                foreach (var car in list)
+                {
+                    Cars.Add(car);
+                }
             }
             finally
             {
@@ -74,36 +76,6 @@ namespace AutoHub.MVVM.ViewModels
             }
         }
 
-        private void FilterCars()
-        {
-            if (string.IsNullOrWhiteSpace(SearchQuery))
-            {
-                Cars.Clear();
-                foreach (var car in _allCars)
-                {
-                    Cars.Add(car);
-                }
-                return;
-            }
-
-            var query = SearchQuery.ToLowerInvariant();
-            var filtered = _allCars.Where(car =>
-                (car.Title?.ToLowerInvariant().Contains(query) ?? false) ||
-                (car.Subtitle?.ToLowerInvariant().Contains(query) ?? false) ||
-                (car.Description?.ToLowerInvariant().Contains(query) ?? false) ||
-                (car.Location?.ToLowerInvariant().Contains(query) ?? false) ||
-                car.Year.ToString().Contains(query) ||
-                car.Price.ToString().Contains(query) ||
-                car.Mileage.ToString().Contains(query) ||
-                (car.IsElectric ? "electric" : "gas").Contains(query)
-            ).ToList();
-
-            Cars.Clear();
-            foreach (var car in filtered)
-            {
-                Cars.Add(car);
-            }
-        }
 
         [RelayCommand]
         private async Task ToggleFavoriteAsync(ListingModel car)

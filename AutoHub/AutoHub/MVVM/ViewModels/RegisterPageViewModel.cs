@@ -79,6 +79,25 @@ namespace AutoHub.MVVM.ViewModels
 
             ValidateAllProperties();
 
+
+            if (!IsPasswordLengthValid)
+            {
+                ErrorMessage = "The password must be at least 8 characters long!";
+                return;
+            }
+
+            if (!IsPasswordUpperCaseValid)
+            {
+                ErrorMessage = "The password must contain at least one capital letter!";
+                return;
+            }
+
+            if (!IsPasswordNumberValid)
+            {
+                ErrorMessage = "The password must contain at least one digit!";
+                return;
+            }
+
             if (HasErrors)
             {
                 var firstError = GetErrors().FirstOrDefault()?.ErrorMessage;

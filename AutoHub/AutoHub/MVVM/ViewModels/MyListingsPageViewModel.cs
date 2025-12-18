@@ -17,7 +17,7 @@ namespace AutoHub.MVVM.ViewModels
     {
 
         [ObservableProperty]
-        private ObservableCollection<ListingModel> _currentUserListings = new();
+        private ObservableCollection<ListingModel> _currentUserListings = [];
 
         [ObservableProperty]
         public partial bool IsLoading { get; set; }
@@ -28,11 +28,55 @@ namespace AutoHub.MVVM.ViewModels
         [ObservableProperty]
         public partial string? ErrorMessage { get; set; }
 
-        private List<ListingModel> _allUserListings = [];
-
         partial void OnSearchQueryChanged(string? value)
         {
-            FilterListings();
+            LoadCarsCommand.Execute(null);
+        }
+
+        [RelayCommand]
+        private async Task ShowMenuAsync(ListingModel listing)
+        {
+            if (listing == null) return;
+
+            try
+            {
+                var action = await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    return await Shell.Current.DisplayActionSheet(
+                        "Choose an action",
+                        "Cancel",
+                        null,
+                        "Edit",
+                        "Delete"
+                    );
+                });
+
+                if (action == "Edit")
+                {
+                    await GoToEditAsync(listing);
+                }
+                else if (action == "Delete")
+                {
+                    var confirm = await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        return await Shell.Current.DisplayAlert(
+                            "Delete Listing",
+                            "Are you sure you want to delete this listing?",
+                            "Delete",
+                            "Cancel"
+                        );
+                    });
+
+                    if (confirm)
+                    {
+                        await DeleteListingAsync(listing);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error: {ex.Message}";
+            }
         }
 
         [RelayCommand]
@@ -53,11 +97,23 @@ namespace AutoHub.MVVM.ViewModels
             try
             {
                 IsLoading = true;
+                ErrorMessage = string.Empty;
 
-                var carList = await listingRepository.GetListingsByUserIdAsync(userId);
+                var carList = await listingRepository.GetListingsByUserIdAsync(userId, SearchQuery);
 
-                _allUserListings = carList;
-                FilterListings();
+                if (carList == null)
+                {
+                    carList = new List<ListingModel>();
+                }
+
+                CurrentUserListings.Clear();
+                foreach (var listing in carList)
+                {
+                    if (listing != null)
+                    {
+                        CurrentUserListings.Add(listing);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -92,12 +148,6 @@ namespace AutoHub.MVVM.ViewModels
                 {
                     CurrentUserListings.Remove(itemToRemove);
                 }
-
-                var itemToRemoveFromAll = _allUserListings.FirstOrDefault(l => l.Id == listing.Id);
-                if (itemToRemoveFromAll != null)
-                {
-                    _allUserListings.Remove(itemToRemoveFromAll);
-                }
             }
             catch (Exception ex)
             {
@@ -128,32 +178,7 @@ namespace AutoHub.MVVM.ViewModels
             LoadCarsCommand.Execute(null);
         }
 
-        private void FilterListings()
-        {
-            if (string.IsNullOrWhiteSpace(SearchQuery))
-            {
-                CurrentUserListings = new ObservableCollection<ListingModel>(_allUserListings);
-                return;
-            }
-
-            var query = SearchQuery.ToLowerInvariant();
-            var filtered = _allUserListings.Where(listing =>
-                (listing.Title?.ToLowerInvariant().Contains(query) ?? false) ||
-                (listing.Subtitle?.ToLowerInvariant().Contains(query) ?? false) ||
-                (listing.Description?.ToLowerInvariant().Contains(query) ?? false) ||
-                (listing.Location?.ToLowerInvariant().Contains(query) ?? false) ||
-                listing.Year.ToString().Contains(query) ||
-                listing.Price.ToString().Contains(query) ||
-                listing.Mileage.ToString().Contains(query) ||
-                (listing.IsElectric ? "electric" : "gas").Contains(query)
-            ).ToList();
-
-            CurrentUserListings.Clear();
-            foreach (var listing in filtered)
-            {
-                CurrentUserListings.Add(listing);
-            }
-        }
+        
     }
 }
 

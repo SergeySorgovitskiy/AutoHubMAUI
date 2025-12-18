@@ -18,7 +18,7 @@ namespace AutoHub.MVVM.ViewModels
     {
 
         [ObservableProperty]
-        private ObservableCollection<ImageSource> _selectedImages = new();
+        private ObservableCollection<PhotoItem> _selectedImages = new();
 
         [ObservableProperty]
         private ObservableCollection<string> _selectedImagePaths = new();
@@ -109,9 +109,20 @@ namespace AutoHub.MVVM.ViewModels
         {
             if (photo == null) return;
 
-            var imageSource = ImageSource.FromFile(photo.FullPath);
-            SelectedImages.Add(imageSource);
-            SelectedImagePaths.Add(photo.FullPath);
+            try
+            {
+                if (!string.IsNullOrEmpty(photo.FullPath))
+                {
+                    var imageSource = ImageSource.FromFile(photo.FullPath);
+                    var photoItem = new PhotoItem(imageSource, photo.FullPath);
+                    SelectedImages.Add(photoItem);
+                    SelectedImagePaths.Add(photo.FullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Failed to load photo: {ex.Message}";
+            }
         }
         public void ClearForm()
         {
@@ -199,6 +210,21 @@ namespace AutoHub.MVVM.ViewModels
             }
         }
 
+        [RelayCommand]
+        private void RemoveImage(object parameter)
+        {
+            if (parameter is not PhotoItem photoItem) return;
+
+            var index = SelectedImages.IndexOf(photoItem);
+            if (index >= 0)
+            {
+                SelectedImages.RemoveAt(index);
+                if (index < SelectedImagePaths.Count)
+                {
+                    SelectedImagePaths.RemoveAt(index);
+                }
+            }
+        }
 
         [RelayCommand]
         private async Task AddListingAsync()

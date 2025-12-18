@@ -219,24 +219,47 @@
                             </Border>
                         </Grid>
 
-                        <CollectionView ItemsSource="{Binding SelectedImages}" SelectionMode="None">
+                        <CollectionView
+                            Margin="0,10,0,0"
+                            ItemsSource="{Binding SelectedImages}"
+                            SelectionMode="None">
                             <CollectionView.ItemsLayout>
-                                <GridItemsLayout Orientation="Horizontal" Span="4" />
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
                             </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <Border
-                                        Margin="5"
-                                        BackgroundColor="White"
-                                        Stroke="{StaticResource Gray200}"
-                                        StrokeShape="5"
-                                        StrokeThickness="1">
-                                        <Image
-                                            Aspect="AspectFill"
-                                            HeightRequest="80"
-                                            Source="{Binding .}"
-                                            WidthRequest="80" />
-                                    </Border>
+                                <DataTemplate x:DataType="models:PhotoItem">
+                                    <Grid>
+                                        <Border
+                                            Padding="0"
+                                            BackgroundColor="Transparent"
+                                            Stroke="{StaticResource Gray300}"
+                                            StrokeShape="RoundRectangle 8"
+                                            StrokeThickness="1">
+                                            <Image
+                                                Aspect="AspectFill"
+                                                HeightRequest="100"
+                                                Source="{Binding ImageSource}"
+                                                WidthRequest="100" />
+                                        </Border>
+                                        <Border
+                                            BackgroundColor="Transparent"
+                                            HorizontalOptions="End"
+                                            Margin="2"
+                                            Padding="0"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Start"
+                                            ZIndex="10">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:AddListingPageViewModel}}, Path=RemoveImageCommand}" 
+                                                    CommandParameter="{Binding .}" />
+                                            </Border.GestureRecognizers>
+                                            <Label
+                                                FontSize="14"
+                                                Text="✕"
+                                                TextColor="Black" />
+                                        </Border>
+                                    </Grid>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>

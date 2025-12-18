@@ -62,10 +62,10 @@
                         <VerticalStackLayout Grid.Column="0">
                             <Label
                                 FontAttributes="Bold"
-                                FontSize="24"
+                                FontSize="20"
                                 Text="{Binding Car.Title}" />
                             <Label
-                                FontSize="16"
+                                FontSize="20"
                                 Text="{Binding Car.Subtitle}"
                                 TextColor="{StaticResource DetailsGray}" />
                         </VerticalStackLayout>
@@ -73,7 +73,7 @@
                         <Label
                             Grid.Column="1"
                             FontAttributes="Bold"
-                            FontSize="24"
+                            FontSize="20"
                             Text="{Binding Car.Price, StringFormat='${0:N0}'}"
                             TextColor="{StaticResource ButtonGreen}" />
                     </Grid>
@@ -111,7 +111,7 @@
                                 Source="mileage.png"
                                 WidthRequest="14" />
                             <Label
-                                FontSize="12"
+                                FontSize="20"
                                 Text="{Binding Car.Mileage, StringFormat='{0:N0} mi'}"
                                 TextColor="{StaticResource DetailsGray}"
                                 VerticalOptions="Center" />
@@ -124,7 +124,7 @@
                                 Source="location.png"
                                 WidthRequest="14" />
                             <Label
-                                FontSize="12"
+                                FontSize="20"
                                 Text="{Binding Car.Location}"
                                 TextColor="{StaticResource DetailsGray}"
                                 VerticalOptions="Center" />
@@ -140,11 +140,18 @@
                         <Label Text="{Binding Car.Description}" />
                     </Border>
 
-
-                    <Label
-                        Margin="10,0,0,0"
-                        Text="Seller"
-                        TextColor="{StaticResource DetailsGray}" />
+                    <HorizontalStackLayout>
+                        <Label
+                            Margin="10,5,0,0"
+                            FontSize="20"
+                            Text="Seller :"
+                            TextColor="{StaticResource DetailsGray}" />
+                        <Label
+                            Margin="10,5"
+                            FontSize="20"
+                            Text="{Binding Seller.Name}"
+                            TextColor="{StaticResource DetailsGray}" />
+                    </HorizontalStackLayout>
                     <Border
                         Padding="5"
                         BackgroundColor="White"
@@ -156,21 +163,17 @@
                                 HorizontalOptions="Center"
                                 StrokeShape="300"
                                 WidthRequest="50">
-                                <Image Source="{Binding Seller.ProfileImageUrl}" />
+                                <Image Aspect="AspectFill" Source="{Binding Seller.ProfileImageUrl}" />
                             </Border>
+
                             <Label
-                                Margin="20,10,10,0"
+                                Margin="10,10,10,0"
                                 FontSize="20"
-                                Text="{Binding Seller.Name}"
-                                TextColor="{StaticResource DetailsGray}" />
-                            <Label
-                                Margin="0,16,10,0"
-                                FontSize="15"
                                 Text="Phone:"
                                 TextColor="{StaticResource DetailsGray}" />
                             <Label
-                                Margin="0,16,10,0"
-                                FontSize="15"
+                                Margin="0,10,10,0"
+                                FontSize="20"
                                 Text="{Binding Seller.PhoneNumber}"
                                 TextColor="{StaticResource DetailsGray}" />
 

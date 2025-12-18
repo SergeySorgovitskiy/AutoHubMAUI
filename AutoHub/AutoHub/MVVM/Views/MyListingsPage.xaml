@@ -94,16 +94,13 @@
                                         StrokeShape="RoundRectangle 10"
                                         StrokeThickness="0"
                                         WidthRequest="120">
-                                        <Image
-                                            Aspect="AspectFill"
-                                            Source="{Binding ImageUrl}" />
+                                        <Image Aspect="AspectFill" Source="{Binding ImageUrl}" />
                                     </Border>
                                     <Image
                                         Margin="8"
                                         HeightRequest="24"
                                         HorizontalOptions="End"
                                         Source="heart_empty"
-                                        TintColor="{StaticResource Gray600}"
                                         VerticalOptions="Start"
                                         WidthRequest="24"
                                         ZIndex="10">
@@ -116,7 +113,7 @@
                                                 TargetType="Image"
                                                 Value="True">
                                                 <Setter Property="Source" Value="heart_filled" />
-                                                <Setter Property="TintColor" Value="Red" />
+                                                <Setter Value="Red" />
                                             </DataTrigger>
                                         </Image.Triggers>
                                     </Image>
@@ -153,38 +150,20 @@
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
 
-                                <VerticalStackLayout
-                                    Grid.Column="2"
-                                    Spacing="12"
-                                    VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
                                     <Border
-                                        Padding="10"
-                                        BackgroundColor="{StaticResource LightGreenBackground}"
-                                        StrokeShape="RoundRectangle 10"
+                                        Padding="8"
+                                        BackgroundColor="Transparent"
                                         StrokeThickness="0">
                                         <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MyListingsPageViewModel}}, Path=GoToEditCommand}" CommandParameter="{Binding .}" />
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MyListingsPageViewModel}}, Path=ShowMenuCommand}" CommandParameter="{Binding .}" />
                                         </Border.GestureRecognizers>
-                                        <Image
-                                            HeightRequest="22"
-                                            Source="edit_icon"
-                                            TintColor="{StaticResource ButtonGreen}"
-                                            WidthRequest="22" />
-                                    </Border>
-
-                                    <Border
-                                        Padding="10"
-                                        BackgroundColor="#FFE0E0"
-                                        StrokeShape="RoundRectangle 10"
-                                        StrokeThickness="0">
-                                        <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MyListingsPageViewModel}}, Path=DeleteListingCommand}" CommandParameter="{Binding .}" />
-                                        </Border.GestureRecognizers>
-                                        <Image
-                                            HeightRequest="22"
-                                            Source="delete_icon"
-                                            TintColor="Red"
-                                            WidthRequest="22" />
+                                        <Label
+                                            FontSize="20"
+                                            HorizontalOptions="Center"
+                                            Text="⋯"
+                                            TextColor="{StaticResource Gray600}"
+                                            VerticalOptions="Center" />
                                     </Border>
                                 </VerticalStackLayout>
                             </Grid>
