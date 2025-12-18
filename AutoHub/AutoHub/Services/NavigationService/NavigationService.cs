@@ -37,5 +37,29 @@ namespace AutoHub.Services.NavigationService
         {
             return Shell.Current.GoToAsync($"{nameof(MyListingsPage)}?Id={userId}");
         }
+        public Task GoToLocationPickerAsync()
+        {
+            return Shell.Current.GoToAsync(nameof(LocationPickerPage));
+        }
+
+        public Task GoToFavoritesAsync(int userId)
+        {
+            return Shell.Current.GoToAsync($"{nameof(FavoritePage)}?Id={userId}");
+        }
+
+        public Task GoToAddListingAsync()
+        {
+            return Shell.Current.GoToAsync(nameof(AddListingPage));
+        }
+
+        public Task GoToProfileAsync()
+        {
+            return Shell.Current.GoToAsync($"//{nameof(ProfilePage)}");
+        }
+
+        public Task GoToEditProfileAsync()
+        {
+            return Shell.Current.GoToAsync(nameof(EditProfilePage));
+        }
     }
 }

@@ -23,6 +23,13 @@ namespace AutoHub.MVVM.Models
 
         [MaxLength(500)]
         public string ProfileImageUrl { get; set; } = "default_profile_image.jpg";
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+
+        [MaxLength(200)]
+        public string LocationAddress { get; set; } = string.Empty;
+
+
 
     }
 }

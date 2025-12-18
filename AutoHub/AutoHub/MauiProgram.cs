@@ -25,6 +25,7 @@ namespace AutoHub
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .UseMauiMaps()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -48,6 +49,7 @@ namespace AutoHub
             builder.Services.AddTransientWithShellRoute<MyListingsPage, MyListingsPageViewModel>(nameof(MyListingsPage));
             builder.Services.AddTransientWithShellRoute<ProfilePage, ProfilePageViewModel>(nameof(ProfilePage));
             builder.Services.AddTransientWithShellRoute<EditProfilePage, EditProfilePageViewModel>(nameof(EditProfilePage));
+            builder.Services.AddTransientWithShellRoute<LocationPickerPage, LocationPickerPageViewModel>(nameof(LocationPickerPage));
             builder.Services.AddSingleton<INavigationService, NavigationService>();
             builder.Services.AddSingleton<IListingRepository, ListingRepository>();
             builder.Services.AddSingleton<IUserRepository, UserRepository>();

@@ -1,6 +1,7 @@
 ﻿using AutoHub.MVVM.Models;
 using AutoHub.MVVM.Views;
 using AutoHub.Services.LoginService;
+using AutoHub.Services.NavigationService;
 using AutoHub.Services.PhotoService;
 using AutoHub.Services.Repositories.UserRepository;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,7 +14,8 @@ namespace AutoHub.MVVM.ViewModels
     public partial class EditProfilePageViewModel(
         IUserRepository userRepository,
         ILoginService loginService,
-        IPhotoService photoService) : ObservableValidator
+        IPhotoService photoService,
+        INavigationService navigationService) : ObservableValidator
     {
         [ObservableProperty]
         public partial UserModel? CurrentUser { get; set; }
@@ -151,7 +153,7 @@ namespace AutoHub.MVVM.ViewModels
                     loginUser.ProfileImageUrl = ProfileImagePath;
                 }
 
-                await Shell.Current.GoToAsync($"//{nameof(ProfilePage)}");
+                await navigationService.GoToProfileAsync();
             }
             catch (Exception ex)
             {

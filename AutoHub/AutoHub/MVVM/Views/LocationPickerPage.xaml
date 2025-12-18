@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AutoHub.MVVM.Views.LocationPickerPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:maui="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:AutoHub.MVVM.ViewModels"
+    Title="Select Location"
+    x:DataType="viewModels:LocationPickerPageViewModel"
+    BackgroundColor="#F0F2F5">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <ActivityIndicator
+            HeightRequest="50"
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            WidthRequest="50"
+            ZIndex="1"
+            Color="#00B09F" />
+
+        <VerticalStackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" Spacing="0">
+
+            <maui:Map
+                x:Name="LocationMap"
+                HeightRequest="400"
+                IsEnabled="True"
+                MapClicked="OnMapClicked"
+                MapType="Street" />
+
+            <Border
+                Padding="20"
+                BackgroundColor="White"
+                StrokeShape="15"
+                StrokeThickness="0">
+                <VerticalStackLayout Spacing="15">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        Text="Selected Location" />
+
+                    <Label
+                        FontSize="16"
+                        Text="{Binding LocationAddress}"
+                        TextColor="{StaticResource Gray600}" />
+
+                    <Label
+                        FontSize="12"
+                        Text="Tap on the map to select your location"
+                        TextColor="{StaticResource Gray600}" />
+
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <Button
+                            Grid.Column="0"
+                            BackgroundColor="#E0E0E0"
+                            Command="{Binding CancelCommand}"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            Text="Cancel"
+                            TextColor="Black" />
+
+                        <Button
+                            Grid.Column="1"
+                            BackgroundColor="{StaticResource ButtonGreen}"
+                            Command="{Binding SaveLocationCommand}"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            Text="Save"
+                            TextColor="White" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label
+                Margin="20"
+                HorizontalOptions="Center"
+                IsVisible="{Binding HasErrorMessage}"
+                Text="{Binding ErrorMessage}"
+                TextColor="Red" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

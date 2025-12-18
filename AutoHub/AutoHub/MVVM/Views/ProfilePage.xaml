@@ -145,6 +145,41 @@
                     </Border>
                 </Grid>
 
+
+                <Label
+                    Margin="0,10,0,0"
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    Text="Location" />
+
+                <Border
+                    Padding="15"
+                    BackgroundColor="White"
+                    StrokeShape="15"
+                    StrokeThickness="0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectLocationCommand}" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="15">
+                        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="16"
+                                Text="My Location" />
+                            <Label
+                                FontSize="12"
+                                Text="{Binding UserLocation}"
+                                TextColor="{StaticResource Gray600}" />
+                        </VerticalStackLayout>
+                        <Label
+                            Grid.Column="1"
+                            FontSize="24"
+                            Text="›"
+                            TextColor="{StaticResource Gray600}"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
                 <Label
                     Margin="0,10,0,0"
                     FontAttributes="Bold"

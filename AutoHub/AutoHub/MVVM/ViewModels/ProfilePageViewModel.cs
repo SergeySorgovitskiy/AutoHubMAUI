@@ -42,6 +42,16 @@ namespace AutoHub.MVVM.ViewModels
             ? $"Joined {CurrentUser.JoinedDate:dd.MM.yyyy}" 
             : "Joined Unknown";
 
+        public string UserLocation => !string.IsNullOrEmpty(CurrentUser?.LocationAddress)
+            ? CurrentUser.LocationAddress
+            : "Location not set";
+
+        [RelayCommand]
+        private async Task SelectLocationAsync()
+        {
+            await navigationService.GoToLocationPickerAsync();
+        }
+
         [RelayCommand]
         private async Task LoadUserDataAsync()
         {
@@ -67,7 +77,7 @@ namespace AutoHub.MVVM.ViewModels
                     ErrorMessage = "Failed to load user data";
                     return;
                 }
-
+               
                 await LoadStatisticsAsync();
 
                 OnPropertyChanged(nameof(UserName));
@@ -75,6 +85,7 @@ namespace AutoHub.MVVM.ViewModels
                 OnPropertyChanged(nameof(UserPhone));
                 OnPropertyChanged(nameof(ProfileImageUrl));
                 OnPropertyChanged(nameof(JoinedDateText));
+                OnPropertyChanged(nameof(UserLocation));
             }
             catch (Exception ex)
             {
@@ -109,29 +120,25 @@ namespace AutoHub.MVVM.ViewModels
         [RelayCommand]
         private async Task GoToFavoritesAsync()
         {
-            await Shell.Current.GoToAsync($"//{nameof(FavoritePage)}");
+            await navigationService.GoToFavoritesAsync(CurrentUser.Id);
         }
 
         [RelayCommand]
         private async Task GoToMyListingsAsync()
         {
-            var user = loginService.CurrentUser;
-            if (user != null)
-            {
-                await navigationService.GoToMyListingsAsync(user.Id);
-            }
+            await navigationService.GoToMyListingsAsync(CurrentUser.Id);
         }
 
         [RelayCommand]
         private async Task GoToAddListingAsync()
         {
-            await Shell.Current.GoToAsync(nameof(AddListingPage));
+            await navigationService.GoToAddListingAsync();
         }
 
         [RelayCommand]
         private async Task EditProfileAsync()
         {
-            await Shell.Current.GoToAsync(nameof(EditProfilePage));
+            await navigationService.GoToEditProfileAsync();
         }
 
         [RelayCommand]

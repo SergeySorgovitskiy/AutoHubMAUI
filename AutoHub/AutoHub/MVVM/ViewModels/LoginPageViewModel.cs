@@ -2,7 +2,7 @@
 using AutoHub.Services.NavigationService;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CoreImage;
+//using CoreImage;
 using Plugin.Maui.Biometric;
 using System.ComponentModel.DataAnnotations;
 

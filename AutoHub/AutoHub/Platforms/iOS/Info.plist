@@ -36,5 +36,9 @@
 	<string>The app requires access to save photos to the gallery.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Need your face to log in!</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>AutoHub needs your location to display it on the map and in your profile.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>AutoHub needs your location to display it on the map and in your profile.</string>
 </dict>
 </plist>
